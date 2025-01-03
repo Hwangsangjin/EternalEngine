@@ -4,9 +4,14 @@
 #include <iostream>
 #include <windows.h>
 
+// 스태틱 변수 초기화
+CEngine* CEngine::Instance = nullptr;
+
 CEngine::CEngine()
 	: bQuit{false}
 {
+	// 싱글톤 객체 설정
+	Instance = this;
 }
 
 CEngine::~CEngine()
@@ -81,12 +86,13 @@ bool CEngine::GetKeyUp(int Key)
 
 void CEngine::QuitGame()
 {
+	// 종료 플래그 설정
 	bQuit = true;
 }
 
 void CEngine::ProcessInput()
 {
-	for (size_t i = 0; i < 255; ++i)
+	for (int i = 0; i < 255; ++i)
 		KeyState[i].bIsKeyDown = GetAsyncKeyState(i) & 0x8000 ? true : false;
 }
 
@@ -106,4 +112,10 @@ void CEngine::SavePreviousKeyStates()
 {
 	for (size_t i = 0; i < 255; ++i)
 		KeyState[i].bWasKeyDown = KeyState[i].bIsKeyDown;
+}
+
+CEngine& CEngine::Get()
+{
+	// 싱글톤 객체 반환
+	return *Instance;
 }

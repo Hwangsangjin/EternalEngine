@@ -36,10 +36,16 @@ protected:
 	// 이전 프레임의 키 상태를 저장하는 함수
 	void SavePreviousKeyStates();
 
-private:
+	// 싱글톤 객체 접근 함수
+	static CEngine& Get();
+
+protected:
 	// 종료할 때 설정할 변수
 	bool bQuit;
 
 	// 키 상태를 저장하는 배열
 	SKeyState KeyState[255];
+
+	// 싱글톤 구현을 위한 스태틱 변수
+	static CEngine* Instance;
 };
