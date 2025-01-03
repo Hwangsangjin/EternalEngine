@@ -3,7 +3,7 @@
 class CObject;
 
 // 레벨 클래스
-class CLevel
+class ENGINE_API CLevel
 {
 public:
 	CLevel();

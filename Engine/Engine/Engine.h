@@ -13,7 +13,7 @@ struct SKeyState
 class CLevel;
 
 // 엔진 클래스
-class CEngine
+class ENGINE_API CEngine
 {
 public:
 	CEngine();

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 // 오브젝트 클래스
-class CObject
+class ENGINE_API CObject
 {
 public:
 	CObject();

@@ -11,8 +11,12 @@
 #define DBG_NEW new
 #endif
 
-// 라이브러리 링크
-#pragma comment(lib, "winmm.lib")
+// 엔진 빌드 매크로
+#if _ENGINE_BUILD
+#define ENGINE_API __declspec(dllexport)
+#else
+#define ENGINE_API __declspec(dllimport)
+#endif
 
 // 미리 컴파일된 헤더
 #include <stdlib.h>
@@ -30,5 +34,3 @@ void SafeDelete(T* Pointer)
 		Pointer = nullptr;
 	}
 }
-
-
