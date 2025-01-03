@@ -1,8 +1,5 @@
-﻿#pragma comment(lib, "winmm.lib")
-
+﻿#include "PreCompiledHeader.h"
 #include "Engine.h"
-#include <iostream>
-#include <windows.h>
 #include "Level/Level.h"
 
 // 스태틱 변수 초기화
@@ -129,6 +126,13 @@ void CEngine::Update(float DeltaTime)
 	// 레벨 업데이트
 	if (MainLevel)
 		MainLevel->Update(DeltaTime);
+
+	// 종료키 입력 확인
+	if (GetKeyDown(VK_ESCAPE))
+		QuitGame();
+
+	// 프레임 확인
+	std::cout << "DeltaTime: " << DeltaTime << ", FPS: " << (1.0f / DeltaTime) << "\n";
 }
 
 void CEngine::Render()

@@ -1,4 +1,5 @@
-﻿#include "Object.h"
+﻿#include "PreCompiledHeader.h"
+#include "Object.h"
 
 CObject::CObject()
 	: bActive{true}

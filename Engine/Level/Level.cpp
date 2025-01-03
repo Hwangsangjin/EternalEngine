@@ -1,6 +1,6 @@
-﻿#include "Level.h"
+﻿#include "PreCompiledHeader.h"
+#include "Level.h"
 #include "Object/Object.h"
-#include <cstring>
 
 CLevel::CLevel()
 	: ObjectArray{nullptr}
