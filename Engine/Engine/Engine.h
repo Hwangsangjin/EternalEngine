@@ -10,6 +10,8 @@ struct SKeyState
 	bool bWasKeyDown = false;
 };
 
+class CLevel;
+
 // 엔진 클래스
 class CEngine
 {
@@ -20,10 +22,16 @@ public:
 	// 엔진 실행 함수
 	void Run();
 
+	// 싱글톤 객체 접근 함수
+	static CEngine& GetInstance();
+
 	// 입력 관련 함수
 	bool GetKey(int Key);
 	bool GetKeyDown(int Key);
 	bool GetKeyUp(int Key);
+
+	// 레벨 추가 함수
+	void LoadLevel(CLevel* NewLevel);
 
 	// 엔진 종료 함수
 	void QuitGame();
@@ -36,9 +44,6 @@ protected:
 	// 이전 프레임의 키 상태를 저장하는 함수
 	void SavePreviousKeyStates();
 
-	// 싱글톤 객체 접근 함수
-	static CEngine& Get();
-
 protected:
 	// 종료할 때 설정할 변수
 	bool bQuit;
@@ -48,4 +53,7 @@ protected:
 
 	// 싱글톤 구현을 위한 스태틱 변수
 	static CEngine* Instance;
+
+	// 메인 레벨 변수
+	CLevel* MainLevel;
 };

@@ -1,21 +1,21 @@
-#pragma once
+ï»¿#pragma once
 
-// ¿ÀºêÁ§Æ® Å¬·¡½º
+// ì˜¤ë¸Œì íŠ¸ í´ë˜ìŠ¤
 class CObject
 {
 public:
 	CObject();
 	virtual ~CObject();
 
-	// ·çÇÁ Ã³¸® ÇÔ¼ö
+	// ë£¨í”„ ì²˜ë¦¬ í•¨ìˆ˜
 	virtual void Update(float DeltaTime);
 	virtual void Render();
 
 protected:
-	// È°¼ºÈ­ »óÅÂÀÎÁö ³ªÅ¸³»´Â º¯¼ö
+	// í™œì„±í™” ìƒíƒœì¸ì§€ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜
 	bool bActive;
 
-	// Á¦°Å ¿äÃ»ÀÌ µÆ´ÂÁö ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö
+	// ì œê±° ìš”ì²­ì´ ëëŠ”ì§€ ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜
 	bool bExpired;
 };
 
