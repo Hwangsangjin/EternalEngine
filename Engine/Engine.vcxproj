@@ -138,7 +138,6 @@
     <ClCompile Include="Actor\Actor.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Level\Level.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="PreCompiledHeader\PreCompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -147,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Object\Object.h" />

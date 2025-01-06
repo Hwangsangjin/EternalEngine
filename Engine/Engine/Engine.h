@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Core.h"
+
 // 입력 처리를 위한 구조체
 struct SKeyState
 {

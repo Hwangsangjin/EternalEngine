@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Core.h"
+
 class CActor;
 
 // 레벨 클래스

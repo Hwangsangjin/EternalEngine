@@ -130,9 +130,6 @@ void CEngine::Update(float DeltaTime)
 	// 종료키 입력 확인
 	if (GetKeyDown(VK_ESCAPE))
 		QuitGame();
-
-	// 프레임 확인
-	std::cout << "DeltaTime: " << DeltaTime << ", FPS: " << (1.0f / DeltaTime) << "\n";
 }
 
 void CEngine::Render()
