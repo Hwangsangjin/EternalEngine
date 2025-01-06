@@ -74,7 +74,7 @@ void CEngine::Run()
 	}
 }
 
-CEngine& CEngine::GetInstance()
+CEngine& CEngine::Get()
 {
 	// 싱글톤 객체 반환
 	return *Instance;

@@ -1,17 +1,17 @@
 ﻿#include "PreCompiledHeader.h"
 #include "Level.h"
-#include "Object/Object.h"
+#include "Actor/Actor.h"
 
 CLevel::CLevel()
-	: ObjectArray{nullptr}
+	: ActorArray{nullptr}
 	, Capacity{4}
 	, Count{0}
 {
 	// 동적 배열 생성
-	ObjectArray = new CObject*[Capacity];
+	ActorArray = new CActor*[Capacity];
 
 	// 초기화
-	memset(ObjectArray, 0, sizeof(CObject*) * Capacity);
+	memset(ActorArray, 0, sizeof(CActor*) * Capacity);
 }
 
 CLevel::~CLevel()
@@ -19,56 +19,56 @@ CLevel::~CLevel()
 	// 메모리 해제
 	for (size_t i = 0; i < Count; ++i)
 	{
-		// 오브젝트 삭제
-		delete ObjectArray[i];
-		ObjectArray[i] = nullptr;
+		// 액터 삭제
+		delete ActorArray[i];
+		ActorArray[i] = nullptr;
 	}
 
 	// 동적 배열 해제
-	delete[] ObjectArray;
-	ObjectArray = nullptr;
+	delete[] ActorArray;
+	ActorArray = nullptr;
 }
 
-void CLevel::AddObject(CObject* NewObject)
+void CLevel::AddActor(CActor* NewActor)
 {
 	// 할당된 공간이 부족하면 크기 변경
 	if (Count == Capacity)
-		ResizeObjectArray();
+		ResizeActorArray();
 
-	// 오브젝트 추가
-	ObjectArray[Count++] = NewObject;
+	// 액터 추가
+	ActorArray[Count++] = NewActor;
 }
 
 void CLevel::Update(float DeltaTime)
 {
-	// 오브젝트 업데이트
+	// 액터 업데이트
 	for (size_t i = 0; i < Count; ++i)
-		ObjectArray[i]->Update(DeltaTime);
+		ActorArray[i]->Update(DeltaTime);
 }
 
 void CLevel::Render()
 {
-	// 오브젝트 렌더
+	// 액터 렌더
 	for (size_t i = 0; i < Count; ++i)
-		ObjectArray[i]->Render();
+		ActorArray[i]->Render();
 }
 
-void CLevel::ResizeObjectArray()
+void CLevel::ResizeActorArray()
 {
 	// 새로운 크기
 	size_t NewCapacity = Capacity * 2;
 
-	// 임시 공간
-	CObject** TempArray = new CObject*[NewCapacity];
+	// 새로운 공간 할당
+	CActor** NewArray = new CActor*[NewCapacity];
 
 	// 기존 값 복사
-	memcpy_s(TempArray, sizeof(CObject*) * NewCapacity, ObjectArray, sizeof(CObject*) * Capacity);
+	memcpy_s(NewArray, sizeof(CActor*) * NewCapacity, ActorArray, sizeof(CActor*) * Capacity);
 
 	// 기존 배열 삭제
-	delete[] ObjectArray;
+	delete[] ActorArray;
 
 	// 배열 교체
-	ObjectArray = TempArray;
+	ActorArray = NewArray;
 
 	// 크기 변경
 	Capacity = NewCapacity;

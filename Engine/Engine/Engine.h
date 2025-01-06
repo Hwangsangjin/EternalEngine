@@ -23,7 +23,7 @@ public:
 	void Run();
 
 	// 싱글톤 객체 접근 함수
-	static CEngine& GetInstance();
+	static CEngine& Get();
 
 	// 입력 관련 함수
 	bool GetKey(int Key);
