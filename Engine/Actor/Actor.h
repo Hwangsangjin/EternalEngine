@@ -5,6 +5,8 @@
 // 액터 클래스
 class ENGINE_API CActor : public CObject
 {
+	RTTI_DECL(CActor, RTTI);
+
 public:
 	CActor();
 	virtual ~CActor();

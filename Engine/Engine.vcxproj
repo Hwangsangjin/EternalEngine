@@ -151,6 +151,7 @@
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="PreCompiledHeader\PreCompiledHeader.h" />
+    <ClInclude Include="RTTI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
