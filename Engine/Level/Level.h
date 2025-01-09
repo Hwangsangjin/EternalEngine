@@ -1,12 +1,15 @@
 ﻿#pragma once
 
 #include "Core.h"
+#include "RTTI.h"
+#include "Container/Array.h"
 
 class CActor;
 
-// 레벨 클래스
-class ENGINE_API CLevel
+class ENGINE_API CLevel : public RTTI
 {
+	RTTI_DECL(CLevel, RTTI)
+
 public:
 	CLevel();
 	virtual ~CLevel();
@@ -19,16 +22,6 @@ public:
 	virtual void Render();
 
 protected:
-	// 액터 배열의 크기 변경 함수
-	void ResizeActorArray();
-
-protected:
 	// 게임 공간에 배치되는 액터의 배열
-	CActor** ActorArray;
-
-	// 액터를 저장할 수 있는 배열의 크기
-	size_t Capacity;
-
-	// 배열에 저장된 액터의 수
-	size_t Count;
+	TArray<CActor*> ActorArray;
 };
