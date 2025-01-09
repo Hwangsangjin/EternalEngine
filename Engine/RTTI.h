@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#pragma warning (disable : 4172)
+
 #include "Core.h"
 
 class ENGINE_API RTTI

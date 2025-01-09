@@ -1,4 +1,4 @@
-﻿#include "PreCompiledHeader.h"
+﻿#include "Precompiled.h"
 #include "Object.h"
 
 CObject::CObject()
