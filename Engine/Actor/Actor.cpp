@@ -4,7 +4,7 @@
 CActor::CActor()
 	: bActive(true)
 	, bExpired(false)
-	, Position(FVector2(0.0f, 0.0f))
+	, Position(FVector2())
 {
 }
 

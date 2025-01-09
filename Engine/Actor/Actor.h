@@ -20,6 +20,12 @@ public:
 	virtual void SetPosition(const FVector2& NewPosition);
 	FORCEINLINE FVector2 GetPositon() const { return Position; }
 
+	// 상태 관련 함수
+	FORCEINLINE bool IsAcive() const { return bActive; }
+	FORCEINLINE void SetActive(bool bIsActive) { bActive = bIsActive; }
+	FORCEINLINE bool HasExpired() const { return bExpired; }
+	FORCEINLINE void Destroy() { bExpired = true; }
+
 protected:
 	// 활성화 상태인지 나타내는 변수
 	bool bActive;
