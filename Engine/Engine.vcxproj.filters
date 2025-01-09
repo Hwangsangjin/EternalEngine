@@ -24,10 +24,16 @@
     <ClCompile Include="Level\Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PreCompiledHeader\PreCompiledHeader.cpp">
+    <ClCompile Include="Precompiled\Precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Actor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\Prompter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +47,7 @@
     <ClInclude Include="Level\Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PreCompiledHeader\PreCompiledHeader.h">
+    <ClInclude Include="Precompiled\Precompiled.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Actor.h">
@@ -51,6 +57,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RTTI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\Array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\Prompter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\Iterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -109,9 +109,9 @@
       <PreprocessorDefinitions>_ENGINE_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)PreCompiledHeader\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>PreCompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,19 +145,25 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
     <ClCompile Include="Actor\Actor.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Level\Level.cpp" />
+    <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="Object\Object.cpp" />
-    <ClCompile Include="PreCompiledHeader\PreCompiledHeader.cpp">
+    <ClCompile Include="Precompiled\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreCompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Actor\Prompter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Container\Array.h" />
+    <ClInclude Include="Container\Iterator.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Level\Level.h" />
+    <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="PreCompiledHeader\PreCompiledHeader.h" />
+    <ClInclude Include="Precompiled\Precompiled.h" />
+    <ClInclude Include="Actor\Prompter.h" />
     <ClInclude Include="RTTI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
