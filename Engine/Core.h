@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+// 인라인 매크로
+#define FORCEINLINE __forceinline
+
 // 디버깅 매크로
 #define _CRTDBG_MAP_ALLOC
 
@@ -151,15 +154,16 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #include <iostream>
+#include <cassert>
 
 // 메모리 삭제 함수
 template <typename T>
-void SafeDelete(T* Pointer)
+void SafeDelete(T* Ptr)
 {
-	if (Pointer)
+	if (Ptr)
 	{
-		delete Pointer;
-		Pointer = nullptr;
+		delete Ptr;
+		Ptr = nullptr;
 	}
 }
 
@@ -168,6 +172,6 @@ template <typename... T>
 void Log(const char* Format, T&&... Args)
 {
 	char Buffer[255];
-	snprintf(Buffer, 255, Format, Args);
+	snprintf(Buffer, 255, Format, Args ...);
 	std::cout << Buffer << "\n";
 }
