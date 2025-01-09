@@ -1,16 +1,22 @@
-﻿#include "PreCompiledHeader.h"
+﻿#include "Precompiled.h"
 #include "Engine.h"
 #include "Level/Level.h"
+#include "Math/Vector2.h"
 
 // 스태틱 변수 초기화
 CEngine* CEngine::Instance = nullptr;
 
 CEngine::CEngine()
-	: bQuit{false}
-	, MainLevel{nullptr}
+	: TargetFrameRate(60.0f)
+	, OneFrameTime(0.0f)
+	, bQuit(false)
+	, MainLevel(nullptr)
 {
 	// 싱글톤 객체 설정
 	Instance = this;
+
+	// 기본 타겟 프레임 속도 설정
+	SetTargetFrameRate(60.0f);
 }
 
 CEngine::~CEngine()
@@ -36,12 +42,6 @@ void CEngine::Run()
 	int64_t CurrentTime = Time.QuadPart;
 	int64_t PreviousTime = 0;
 
-	// 프레임 제한
-	constexpr float TargetFrameRate = 60.0f;
-
-	// 프레임 시간 계산
-	constexpr float TargetOneFrameTime = 1.0f / TargetFrameRate;
-
 	// 게임 루프
 	while (true)
 	{
@@ -56,13 +56,19 @@ void CEngine::Run()
 		// 프레임 시간 계산
 		const float DeltaTime = static_cast<float>(CurrentTime - PreviousTime) / static_cast<float>(Frequency.QuadPart);
 
+		// 한프레임 시간 계산
+		OneFrameTime = 1.0f / TargetFrameRate;
+
 		// 프레임 확인
-		if (DeltaTime >= TargetOneFrameTime)
+		if (DeltaTime >= OneFrameTime)
 		{
 			// 입력 처리 (현재 키의 눌림 상태 확인)
 			ProcessInput();
 
+			// 업데이트
 			Update(DeltaTime);
+
+			// 렌더
 			Render();
 
 			// 키 상태 저장
@@ -76,7 +82,6 @@ void CEngine::Run()
 
 CEngine& CEngine::Get()
 {
-	// 싱글톤 객체 반환
 	return *Instance;
 }
 
@@ -107,6 +112,50 @@ void CEngine::LoadLevel(CLevel* NewLevel)
 
 	// 메인 레벨 설정
 	MainLevel = NewLevel;
+}
+
+void CEngine::SetCursorType(ECursorType CursorType)
+{
+	// #1 커서 속성 구조체 설정
+	CONSOLE_CURSOR_INFO Info = {};
+
+	// 타입 별로 구조체 값 설정
+	switch (CursorType)
+	{
+	case ECursorType::NoCursor:
+		Info.dwSize = 1;
+		Info.bVisible = FALSE;
+		break;
+	case ECursorType::SolidCursor:
+		Info.dwSize = 100;
+		Info.bVisible = TRUE;
+		break;
+	case ECursorType::NormalCursor:
+		Info.dwSize = 20;
+		Info.bVisible = TRUE;
+		break;
+	}
+
+	// #2 설정
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+}
+
+void CEngine::SetCursorPosition(const FVector2& Position)
+{
+	SetCursorPosition(static_cast<int>(Position.X), static_cast<int>(Position.Y));
+}
+
+void CEngine::SetCursorPosition(int X, int Y)
+{
+	static const HANDLE Handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	const COORD Coord = {static_cast<short>(X), static_cast<short>(Y)};
+	SetConsoleCursorPosition(Handle, Coord);
+}
+
+void CEngine::SetTargetFrameRate(float FrameRate)
+{
+	TargetFrameRate = FrameRate;
+	OneFrameTime = 1.0f / FrameRate;
 }
 
 void CEngine::QuitGame()

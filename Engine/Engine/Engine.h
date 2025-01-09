@@ -12,7 +12,16 @@ struct SKeyState
 	bool bWasKeyDown = false;
 };
 
+// 커서의 종류를 설정할 때 사용할 열거형
+enum class ECursorType
+{
+	NoCursor,
+	SolidCursor,
+	NormalCursor
+};
+
 class CLevel;
+struct FVector2;
 
 // 엔진 클래스
 class ENGINE_API CEngine
@@ -35,6 +44,14 @@ public:
 	// 레벨 추가 함수
 	void LoadLevel(CLevel* NewLevel);
 
+	// 화면 좌표 관련 함수
+	void SetCursorType(ECursorType CursorType);
+	void SetCursorPosition(const FVector2& Position);
+	void SetCursorPosition(int X, int Y);
+
+	// 타겟 프레임 속도 설정 함수
+	void SetTargetFrameRate(float TargetFrameRate);
+
 	// 엔진 종료 함수
 	void QuitGame();
 
@@ -47,6 +64,12 @@ protected:
 	void SavePreviousKeyStates();
 
 protected:
+	// 타겟 프레임 변수 (초당 프레임)
+	float TargetFrameRate;
+
+	// 한 프레임 시간 값 (단위: 초)
+	float OneFrameTime;
+
 	// 종료할 때 설정할 변수
 	bool bQuit;
 
