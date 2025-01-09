@@ -19,16 +19,46 @@ void CLevel::AddActor(CActor* NewActor)
 	ActorArray.Add(NewActor);
 }
 
+void CLevel::DestroyActor()
+{
+	// 액터 삭제
+	for (size_t i = 0; i < ActorArray.Num();)
+	{
+		if (ActorArray[i]->HasExpired())
+		{
+			delete ActorArray[i];
+			ActorArray[i] = nullptr;
+			ActorArray.RemoveAt(i);
+		}
+		else
+		{
+			++i;
+		}
+	}
+}
+
 void CLevel::Update(float DeltaTime)
 {
 	// 액터 업데이트
 	for (auto const& Actor : ActorArray)
+	{
+		// 액터가 비활성화 상태이거나, 삭제 요청된 경우 제외
+		if (!Actor->IsAcive() || Actor->HasExpired())
+			continue;
+
 		Actor->Update(DeltaTime);
+	}
 }
 
 void CLevel::Render()
 {
 	// 액터 렌더
 	for (auto const& Actor : ActorArray)
+	{
+		// 액터가 비활성화 상태이거나, 삭제 요청된 경우 제외
+		if (!Actor->IsAcive() || Actor->HasExpired())
+			continue;
+
 		Actor->Render();
+	}
 }

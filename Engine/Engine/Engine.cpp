@@ -1,6 +1,7 @@
 ﻿#include "Precompiled.h"
 #include "Engine.h"
 #include "Level/Level.h"
+#include "Actor/Actor.h"
 #include "Math/Vector2.h"
 
 // 스태틱 변수 초기화
@@ -9,6 +10,7 @@ CEngine* CEngine::Instance = nullptr;
 CEngine::CEngine()
 	: TargetFrameRate(60.0f)
 	, OneFrameTime(0.0f)
+	, bShouldUpdate(true)
 	, bQuit(false)
 	, MainLevel(nullptr)
 {
@@ -31,6 +33,10 @@ CEngine::~CEngine()
 
 void CEngine::Run()
 {
+	// 메인 레벨이 없는 경우 리턴
+	if (!MainLevel)
+		return;
+
 	// CPU 시계 사용
 	LARGE_INTEGER Frequency;
 	QueryPerformanceFrequency(&Frequency);
@@ -56,8 +62,8 @@ void CEngine::Run()
 		// 프레임 시간 계산
 		const float DeltaTime = static_cast<float>(CurrentTime - PreviousTime) / static_cast<float>(Frequency.QuadPart);
 
-		// 한프레임 시간 계산
-		OneFrameTime = 1.0f / TargetFrameRate;
+		// 한 프레임 시간 계산
+		//OneFrameTime = 1.0f / TargetFrameRate;
 
 		// 프레임 확인
 		if (DeltaTime >= OneFrameTime)
@@ -65,17 +71,26 @@ void CEngine::Run()
 			// 입력 처리 (현재 키의 눌림 상태 확인)
 			ProcessInput();
 
-			// 업데이트
-			Update(DeltaTime);
+			if (bShouldUpdate)
+			{
+				// 업데이트
+				Update(DeltaTime);
 
-			// 렌더
-			Render();
+				// 렌더
+				Render();
+			}
 
 			// 키 상태 저장
 			SavePreviousKeyStates();
 
 			// 이전 프레임 시간 저장
 			PreviousTime = CurrentTime;
+
+			// 삭제 요청된 액터 정리
+			MainLevel->DestroyActor();
+
+			// 프레임 업데이트 활성화
+			bShouldUpdate = true;
 		}
 	}
 }
@@ -102,6 +117,10 @@ bool CEngine::GetKeyUp(int Key)
 
 void CEngine::LoadLevel(CLevel* NewLevel)
 {
+	// 새로운 레벨이 널인 경우 리턴
+	if (!NewLevel)
+		return;
+
 	// 메인 레벨과 새로운 레벨이 같은 경우 리턴
 	if (MainLevel == NewLevel)
 		return;
@@ -112,6 +131,24 @@ void CEngine::LoadLevel(CLevel* NewLevel)
 
 	// 메인 레벨 설정
 	MainLevel = NewLevel;
+}
+
+void CEngine::AddActor(CActor* NewActor)
+{
+	if (!NewActor)
+		return;
+
+	bShouldUpdate = false;
+	MainLevel->AddActor(NewActor);
+}
+
+void CEngine::DestroyActor(CActor* TargetActor)
+{
+	if (!TargetActor)
+		return;
+
+	bShouldUpdate = false;
+	TargetActor->Destroy();
 }
 
 void CEngine::SetCursorType(ECursorType CursorType)
@@ -173,19 +210,31 @@ void CEngine::ProcessInput()
 void CEngine::Update(float DeltaTime)
 {
 	// 레벨 업데이트
-	if (MainLevel)
-		MainLevel->Update(DeltaTime);
+	MainLevel->Update(DeltaTime);
 
 	// 종료키 입력 확인
 	if (GetKeyDown(VK_ESCAPE))
 		QuitGame();
 }
 
+void CEngine::Clear()
+{
+	SetCursorPosition(0, 0);
+
+	constexpr size_t Height = 25;
+	for (size_t i = 0; i < Height; ++i)
+		std::cout << "                               \n";
+
+	SetCursorPosition(0, 0);
+}
+
 void CEngine::Render()
 {
+	// 화면 지우기
+	Clear();
+
 	// 레벨 렌더
-	if (MainLevel)
-		MainLevel->Render();
+	MainLevel->Render();
 }
 
 void CEngine::SavePreviousKeyStates()

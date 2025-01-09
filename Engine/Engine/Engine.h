@@ -21,6 +21,7 @@ enum class ECursorType
 };
 
 class CLevel;
+class CActor;
 struct FVector2;
 
 // 엔진 클래스
@@ -44,6 +45,10 @@ public:
 	// 레벨 추가 함수
 	void LoadLevel(CLevel* NewLevel);
 
+	// 액터 추가, 삭제 함수
+	void AddActor(CActor* NewActor);
+	void DestroyActor(CActor* TargetActor);
+
 	// 화면 좌표 관련 함수
 	void SetCursorType(ECursorType CursorType);
 	void SetCursorPosition(const FVector2& Position);
@@ -58,6 +63,7 @@ public:
 protected:
 	void ProcessInput();
 	void Update(float DeltaTime);
+	void Clear();
 	void Render();
 
 	// 이전 프레임의 키 상태를 저장하는 함수
@@ -69,6 +75,9 @@ protected:
 
 	// 한 프레임 시간 값 (단위: 초)
 	float OneFrameTime;
+
+	// 프레임 업데이트 여부 변수
+	bool bShouldUpdate;
 
 	// 종료할 때 설정할 변수
 	bool bQuit;
