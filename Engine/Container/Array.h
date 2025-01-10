@@ -11,74 +11,76 @@ public:
 	using ValueType = T;
 	using Iterator = Iterator<TArray<T>>;
 
-	 Iterator begin()
+	Iterator begin()
 	{
 		return Iterator(DataPtr);
 	}
 
-	 const Iterator begin() const
+	const Iterator begin() const
 	{
 		return Iterator(DataPtr);
 	}
 
-	 Iterator end()
+	Iterator end()
 	{
 		return Iterator(DataPtr + ArrayNum);
 	}
 
-	 const Iterator end() const
+	const Iterator end() const
 	{
 		return Iterator(DataPtr + ArrayNum);
 	}
 
-	 Iterator rbegin()
+	Iterator rbegin()
 	{
 		return Iterator(DataPtr + ArrayNum - 1);
 	}
 
-	 const Iterator rbegin() const
+	const Iterator rbegin() const
 	{
 		return Iterator(DataPtr + ArrayNum - 1);
 	}
 
-	 Iterator rend()
+	Iterator rend()
 	{
 		return Iterator(DataPtr - 1);
 	}
 
-	 const Iterator rend() const
+	const Iterator rend() const
 	{
 		return Iterator(DataPtr - 1);
 	}
 
 public:
 	// 생성자
-	 TArray()
+	TArray()
 		: ArrayNum(0)
 		, ArrayMax(2)
-		, DataPtr(new T[ArrayMax])
-	{}
+	{
+		DataPtr = new T[NewArrayMax];
+		std::fill(DataPtr, DataPtr + NewArrayMax, T());
+	}
 
 	// 초기화 목록 생성자
-	 TArray(const std::initializer_list<T>& Initializer_List)
+	TArray(const std::initializer_list<T>& Initializer_List)
 		: ArrayNum(Initializer_List.size())
 		, ArrayMax(ArrayNum == 0 ? 2 : ArrayNum)
-		, DataPtr(new T[ArrayMax])
 	{
+		DataPtr = new T[ArrayMax];
 		std::copy(Initializer_List.begin(), Initializer_List.end(), DataPtr);
 	}
 
 	// 복사 생성자
-	 TArray(const TArray& Other)
+	TArray(const TArray& Other)
 		: ArrayNum(Other.ArrayNum)
 		, ArrayMax(Other.ArrayMax)
-		, DataPtr(new T[Other.ArrayMax])
 	{
+		DataPtr = new T[ArrayMax];
 		std::copy(Other.DataPtr, Other.DataPtr + ArrayNum, DataPtr);
 	}
 
 	// 이동 생성자
-	 TArray(TArray&& Other) noexcept
+	TArray(TArray&& Other) noexcept
 		: ArrayNum(Other.ArrayNum)
 		, ArrayMax(Other.ArrayMax)
 		, DataPtr(Other.DataPtr)
@@ -89,7 +91,7 @@ public:
 	}
 
 	// 대입 연산자
-	 TArray& operator=(const TArray& Other)
+	TArray& operator=(const TArray& Other)
 	{
 		if (this != &Other)
 		{
@@ -106,7 +108,7 @@ public:
 	}
 
 	// 이동 대입 연산자
-	 TArray& operator=(TArray&& Other) noexcept
+	TArray& operator=(TArray&& Other) noexcept
 	{
 		if (this != &Other)
 		{
@@ -131,44 +133,44 @@ public:
 		DataPtr = nullptr;
 	}
 
-	 T* GetData()
+	T* GetData()
 	{
 		return DataPtr;
 	}
 
-	 const T* GetData() const
+	const T* GetData() const
 	{
 		return DataPtr;
 	}
 
-	 size_t GetSlack() const
+	size_t GetSlack() const
 	{
 		return ArrayMax - ArrayNum;
 	}
 
-	 bool IsValidIndex(size_t Index) const
+	bool IsValidIndex(size_t Index) const
 	{
 		return Index < ArrayNum;
 	}
 
-	 bool IsEmpty() const
+	bool IsEmpty() const
 	{
 		return ArrayNum == 0;
 	}
 
-	 T& operator[](size_t Index)
+	T& operator[](size_t Index)
 	{
 		assert(Index < ArrayNum);
 		return DataPtr[Index];
 	}
 
-	 const T& operator[](size_t Index) const
+	const T& operator[](size_t Index) const
 	{
 		assert(Index < ArrayNum);
 		return DataPtr[Index];
 	}
 
-	 void Add(const T& Value)
+	void Add(const T& Value)
 	{
 		if (ArrayNum == ArrayMax)
 			Resize(ArrayMax * 2);
@@ -176,7 +178,7 @@ public:
 		DataPtr[ArrayNum++] = Value;
 	}
 
-	 void Add(T&& Value) noexcept
+	void Add(T&& Value) noexcept
 	{
 		if (ArrayNum == ArrayMax)
 			Resize(ArrayMax * 2);
@@ -184,7 +186,7 @@ public:
 		DataPtr[ArrayNum++] = std::move(Value);
 	}
 
-	 void Reset(size_t NewSize = 0)
+	void Reset(size_t NewSize = 0)
 	{
 		if (NewSize == 0)
 		{
@@ -195,7 +197,7 @@ public:
 		ArrayNum = 0;
 	}
 
-	 void Empty(size_t Slack = 0)
+	void Empty(size_t Slack = 0)
 	{
 		if (Slack > 0)
 		{
@@ -208,7 +210,7 @@ public:
 		}
 	}
 
-	 void Resize(size_t Size) noexcept
+	void Resize(size_t Size) noexcept
 	{
 		T* NewDataPtr = new T[Size];
 		std::move(DataPtr, DataPtr + ArrayNum, NewDataPtr);
@@ -217,7 +219,7 @@ public:
 		ArrayMax = Size;
 	}
 
-	 void RemoveAt(size_t Index) noexcept
+	void RemoveAt(size_t Index) noexcept
 	{
 		assert(Index < ArrayNum);
 
@@ -227,7 +229,7 @@ public:
 		--ArrayNum;
 	}
 
-	 void Remove(const T& Value) noexcept
+	void Remove(const T& Value) noexcept
 	{
 		for (size_t i = 0; i < ArrayNum; ++i)
 		{
@@ -239,12 +241,12 @@ public:
 		}
 	}
 
-	 constexpr size_t Num() const
+	constexpr size_t Num() const
 	{
 		return ArrayNum;
 	}
 
-	 constexpr size_t Max() const
+	constexpr size_t Max() const
 	{
 		return ArrayMax;
 	}

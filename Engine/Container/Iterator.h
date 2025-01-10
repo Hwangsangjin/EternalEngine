@@ -11,11 +11,11 @@ public:
 	using IteratorCategory = std::random_access_iterator_tag;
 
 public:
-	 constexpr Iterator(Pointer Ptr)
+	constexpr Iterator(Pointer Ptr)
 		: Ptr(Ptr)
 	{}
 
-	 Iterator& operator=(const Iterator& Other)
+	Iterator& operator=(const Iterator& Other)
 	{
 		if (this != &Other)
 			Ptr = Other.Ptr;
@@ -23,115 +23,115 @@ public:
 		return *this;
 	}
 
-	 constexpr Iterator& operator++()
+	constexpr Iterator& operator++()
 	{
 		++Ptr;
 		return *this;
 	}
 
-	 constexpr Iterator& operator++(int)
+	constexpr Iterator& operator++(int)
 	{
 		Iterator Temp = *this;
 		++(*this);
 		return Temp;
 	}
 
-	 constexpr Iterator& operator--()
+	constexpr Iterator& operator--()
 	{
 		--Ptr;
 		return *this;
 	}
 
-	 constexpr Iterator& operator--(int)
+	constexpr Iterator& operator--(int)
 	{
 		Iterator Temp = *this;
 		--(*this);
 		return Temp;
 	}
 
-	 constexpr Iterator operator+(DifferenceType Offset) const
+	constexpr Iterator operator+(DifferenceType Offset) const
 	{
 		return Iterator(Ptr + Offset);
 	}
 
-	 constexpr Iterator operator-(DifferenceType Offset) const
+	constexpr Iterator operator-(DifferenceType Offset) const
 	{
 		return Iterator(Ptr - Offset);
 	}
 
-	 constexpr ptrdiff_t operator-(const Iterator& Other) const
+	constexpr ptrdiff_t operator-(const Iterator& Other) const
 	{
 		return Ptr - Other.Ptr;
 	}
 
-	 constexpr Iterator& operator+=(size_t Offset)
+	constexpr Iterator& operator+=(size_t Offset)
 	{
 		Ptr += Offset;
 		return *this;
 	}
 
-	 constexpr Iterator& operator-=(size_t Offset)
+	constexpr Iterator& operator-=(size_t Offset)
 	{
 		Ptr -= Offset;
 		return *this;
 	}
 
-	 Pointer operator->()
+	Pointer operator->()
 	{
 		return Ptr;
 	}
 
-	 Pointer operator->() const
+	Pointer operator->() const
 	{
 		return Ptr;
 	}
 
-	 Reference operator*()
+	Reference operator*()
 	{
 		return *Ptr;
 	}
 
-	 Reference operator*() const
+	Reference operator*() const
 	{
 		return *Ptr;
 	}
 
-	 Reference operator[](size_t Index)
+	Reference operator[](size_t Index)
 	{
 		return *(Ptr + Index);
 	}
 
-	 Reference operator[](size_t Index) const
+	Reference operator[](size_t Index) const
 	{
 		return *(Ptr + Index);
 	}
 
-	 constexpr bool operator==(const Iterator& Other) const
+	constexpr bool operator==(const Iterator& Other) const
 	{
 		return Ptr == Other.Ptr;
 	}
 
-	 constexpr bool operator!=(const Iterator& Other) const
+	constexpr bool operator!=(const Iterator& Other) const
 	{
 		return Ptr != Other.Ptr;
 	}
 
-	 constexpr bool operator<(const Iterator& Other) const
+	constexpr bool operator<(const Iterator& Other) const
 	{
 		return Ptr < Other.Ptr;
 	}
 
-	 constexpr bool operator<=(const Iterator& Other) const
+	constexpr bool operator<=(const Iterator& Other) const
 	{
 		return Ptr <= Other.Ptr;
 	}
 
-	 constexpr bool operator>(const Iterator& Other) const
+	constexpr bool operator>(const Iterator& Other) const
 	{
 		return Ptr > Other.Ptr;
 	}
 
-	 constexpr bool operator>=(const Iterator& Other) const
+	constexpr bool operator>=(const Iterator& Other) const
 	{
 		return Ptr >= Other.Ptr;
 	}
