@@ -2,7 +2,6 @@
 
 #include "Core.h"
 #include "RTTI.h"
-#include "Container/Array.h"
 
 class CActor;
 
@@ -25,6 +24,6 @@ public:
 	virtual void Render();
 
 protected:
-	// 게임 공간에 배치되는 액터의 배열
-	TArray<CActor*> ActorArray;
+	// 게임 내 배치된 액터의 동적 배열
+	std::vector<CActor*> Actors;
 };

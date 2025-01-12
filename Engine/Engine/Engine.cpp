@@ -62,9 +62,6 @@ void CEngine::Run()
 		// 프레임 시간 계산
 		const float DeltaTime = static_cast<float>(CurrentTime - PreviousTime) / static_cast<float>(Frequency.QuadPart);
 
-		// 한 프레임 시간 계산
-		//OneFrameTime = 1.0f / TargetFrameRate;
-
 		// 프레임 확인
 		if (DeltaTime >= OneFrameTime)
 		{

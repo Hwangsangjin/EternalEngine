@@ -17,7 +17,7 @@ public:
 	virtual void Render();
 
 	// 위치 관련 함수
-	virtual void SetPosition(const FVector2& NewPosition);
+	FORCEINLINE virtual void SetPosition(const FVector2& NewPosition) { Position = NewPosition; }
 	FORCEINLINE FVector2 GetPositon() const { return Position; }
 
 	// 상태 관련 함수

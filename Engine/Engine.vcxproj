@@ -155,8 +155,6 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
-    <ClInclude Include="Container\Array.h" />
-    <ClInclude Include="Container\Iterator.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Level\Level.h" />
