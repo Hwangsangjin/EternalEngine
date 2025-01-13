@@ -13,17 +13,22 @@ public:
 	CLevel();
 	virtual ~CLevel();
 
-	// 액터 추가 함수
+	// 액터 추가, 삭제 함수
 	void AddActor(CActor* NewActor);
-
-	// 삭제 요청이 된 액터를 정리하는 함수
-	void DestroyActor();
+	void RemoveActor(CActor* NewActor);
+	void RemoveActorFromArray(std::vector<CActor*>& ActorArray, CActor* TargetActor);
 
 	// 루프 처리 함수
 	virtual void Update(float DeltaTime);
 	virtual void Render();
 
 protected:
-	// 게임 내 배치된 액터의 동적 배열
+	// 활성화된 액터의 동적 배열
 	std::vector<CActor*> Actors;
+
+	// 대기 중인 액터의 동적 배열
+	std::vector<CActor*> PendingActors;
+
+private:
+	bool bUpdatingActors;
 };
