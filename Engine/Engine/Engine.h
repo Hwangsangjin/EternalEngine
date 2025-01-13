@@ -2,24 +2,6 @@
 
 #include "Core.h"
 
-// 입력 처리를 위한 구조체
-struct SKeyState
-{
-	// 현재 프레임에 키가 눌렸는지 확인
-	bool bIsKeyDown = false;
-
-	// 이전 프레임에 키가 눌렸었는지 확인
-	bool bWasKeyDown = false;
-};
-
-// 커서의 종류를 설정할 때 사용할 열거형
-enum class ECursorType
-{
-	NoCursor,
-	SolidCursor,
-	NormalCursor
-};
-
 class CLevel;
 class CActor;
 struct FVector2;
@@ -27,6 +9,46 @@ struct FVector2;
 // 엔진 클래스
 class ENGINE_API CEngine
 {
+public:
+	// 키 입력 상태
+	struct SKeyState
+	{
+		// 현재 프레임에 키가 눌렸는지 확인
+		bool bIsKeyDown = false;
+
+		// 이전 프레임에 키가 눌렸었는지 확인
+		bool bWasKeyDown = false;
+	};
+
+	// 커서 종류
+	enum class ECursorType
+	{
+		NoCursor,
+		SolidCursor,
+		NormalCursor
+	};
+
+	// 폰트 색상
+	enum class EColorType
+	{
+		Black,
+		DarkBlue,
+		DarkGreen,
+		DarkSkyblue,
+		DarkRed,
+		DarkVoilet,
+		DakrYellow,
+		Gray,
+		DarkGray,
+		Blue,
+		Green,
+		SkyBlue,
+		Red,
+		Violet,
+		Yellow,
+		White
+	};
+
 public:
 	CEngine();
 	virtual ~CEngine();
@@ -47,12 +69,17 @@ public:
 
 	// 액터 추가, 삭제 함수
 	void AddActor(CActor* NewActor);
-	void DestroyActor(CActor* TargetActor);
+	void RemoveActor(CActor* TargetActor);
 
 	// 화면 좌표 관련 함수
-	void SetCursorType(ECursorType CursorType);
+	void SetCursorType(const ECursorType& CursorType);
 	void SetCursorPosition(const FVector2& Position);
-	void SetCursorPosition(int X, int Y);
+
+	// 색상 설정 함수
+	void SetConsoleColor(const EColorType& Color);
+
+	// 출력 관련 함수
+	void PrintText(const FVector2& Position, const EColorType& Color, const std::string& Text);
 
 	// 타겟 프레임 속도 설정 함수
 	void SetTargetFrameRate(float TargetFrameRate);
@@ -64,20 +91,27 @@ protected:
 	void ProcessInput();
 	void Update(float DeltaTime);
 	void Clear();
+	void Present();
 	void Render();
 
 	// 이전 프레임의 키 상태를 저장하는 함수
 	void SavePreviousKeyStates();
 
 protected:
+	// 표준 디바이스 핸들
+	HANDLE StdHandle;
+
+	// 더블 버퍼링 변수
+	HANDLE FrontBuffer;
+	HANDLE BackBuffer;
+	COORD BufferSize;
+	CONSOLE_SCREEN_BUFFER_INFO BufferInfo;
+
 	// 타겟 프레임 변수 (초당 프레임)
 	float TargetFrameRate;
 
 	// 한 프레임 시간 값 (단위: 초)
 	float OneFrameTime;
-
-	// 프레임 업데이트 여부 변수
-	bool bShouldUpdate;
 
 	// 종료할 때 설정할 변수
 	bool bQuit;

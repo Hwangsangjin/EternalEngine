@@ -151,7 +151,6 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Actor\Prompter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
@@ -161,7 +160,6 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Precompiled\Precompiled.h" />
-    <ClInclude Include="Actor\Prompter.h" />
     <ClInclude Include="RTTI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
