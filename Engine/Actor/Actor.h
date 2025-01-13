@@ -9,7 +9,16 @@ class ENGINE_API CActor : public CObject
 	RTTI_DECL(CActor, CObject);
 
 public:
+	enum class EState
+	{
+		EActive,
+		EPaused,
+		Expired
+	};
+
+public:
 	CActor();
+	CActor(const std::string& Text);
 	virtual ~CActor();
 
 	// 루프 처리 함수
@@ -21,18 +30,15 @@ public:
 	FORCEINLINE FVector2 GetPositon() const { return Position; }
 
 	// 상태 관련 함수
-	FORCEINLINE bool IsAcive() const { return bActive; }
-	FORCEINLINE void SetActive(bool bIsActive) { bActive = bIsActive; }
-	FORCEINLINE bool HasExpired() const { return bExpired; }
-	FORCEINLINE void Destroy() { bExpired = true; }
+	FORCEINLINE EState GetState() const { return State; }
 
 protected:
-	// 활성화 상태인지 나타내는 변수
-	bool bActive;
-
-	// 제거 요청이 됐는지 여부를 나타내는 변수
-	bool bExpired;
+	// 액터의 상태
+	EState State;
 
 	// 액터의 위치
 	FVector2 Position;
+
+	// 액터의 텍스트 이미지
+	std::string Text;
 };
