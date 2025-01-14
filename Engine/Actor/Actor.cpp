@@ -2,16 +2,9 @@
 #include "Actor.h"
 #include "Engine/Engine.h"
 
-CActor::CActor()
-	: State(EState::EActive)
-	, Position(FVector2::Zero)
-	, Text("")
-{
-}
-
-CActor::CActor(const std::string& Text)
-	: State(EState::EActive)
-	, Position(FVector2::Zero)
+CActor::CActor(const FVector2& Position, const WORD& Color, const std::string& Text)
+	: Position(Position)
+	, Color(Color)
 	, Text(Text)
 {
 }
@@ -27,5 +20,5 @@ void CActor::Update(float DeltaTime)
 
 void CActor::Render()
 {
-	CEngine::Get().PrintText(Position, CEngine::EColorType::White, Text);
+	CEngine::Get().PrintText(Position, Color, Text);
 }
