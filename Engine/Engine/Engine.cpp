@@ -2,7 +2,6 @@
 #include "Engine.h"
 #include "Level/Level.h"
 #include "Actor/Actor.h"
-#include "Math/Vector2.h"
 
 // 스태틱 변수 초기화
 CEngine* CEngine::Instance = nullptr;
@@ -11,11 +10,11 @@ CEngine::CEngine()
 	: StdHandle(GetStdHandle(STD_OUTPUT_HANDLE))
 	, FrontBuffer(INVALID_HANDLE_VALUE)
 	, BackBuffer(INVALID_HANDLE_VALUE)
-	, BufferSize({ 1920, 1080 })
+	, BufferSize(COORD(1920, 1080))
 	, TargetFrameRate(60.0f)
 	, OneFrameTime(0.0f)
 	, bQuit(false)
-	, MainLevel(nullptr)
+	, PersistentLevel(nullptr)
 {
 	// 싱글톤 객체 설정
 	Instance = this;
@@ -34,12 +33,13 @@ CEngine::CEngine()
 CEngine::~CEngine()
 {
 	// 메인 레벨 메모리 해제
-	if (MainLevel)
+	if (PersistentLevel)
 	{
-		delete MainLevel;
-		MainLevel = nullptr;
+		delete PersistentLevel;
+		PersistentLevel = nullptr;
 	}
 
+	// 화면 버퍼 메모리 해제
 	if (FrontBuffer != INVALID_HANDLE_VALUE)
 		CloseHandle(FrontBuffer);
 	if (BackBuffer != INVALID_HANDLE_VALUE)
@@ -49,7 +49,7 @@ CEngine::~CEngine()
 void CEngine::Run()
 {
 	// 메인 레벨이 없는 경우 리턴
-	if (!MainLevel)
+	if (!PersistentLevel)
 		return;
 
 	// CPU 시계 사용
@@ -125,15 +125,15 @@ void CEngine::LoadLevel(CLevel* NewLevel)
 		return;
 
 	// 메인 레벨과 새로운 레벨이 같은 경우 리턴
-	if (MainLevel == NewLevel)
+	if (PersistentLevel == NewLevel)
 		return;
 
 	// 기존 레벨이 있다면 삭제
-	if (MainLevel)
-		delete MainLevel;
+	if (PersistentLevel)
+		delete PersistentLevel;
 
 	// 메인 레벨 설정
-	MainLevel = NewLevel;
+	PersistentLevel = NewLevel;
 }
 
 void CEngine::AddActor(CActor* NewActor)
@@ -141,7 +141,7 @@ void CEngine::AddActor(CActor* NewActor)
 	if (!NewActor)
 		return;
 
-	MainLevel->AddActor(NewActor);
+	PersistentLevel->AddActor(NewActor);
 }
 
 void CEngine::RemoveActor(CActor* TargetActor)
@@ -149,12 +149,11 @@ void CEngine::RemoveActor(CActor* TargetActor)
 	if (!TargetActor)
 		return;
 
-	MainLevel->RemoveActor(TargetActor);
+	PersistentLevel->RemoveActor(TargetActor);
 }
 
 void CEngine::SetCursorType(const ECursorType& CursorType)
 {
-	// #1 커서 속성 구조체 설정
 	CONSOLE_CURSOR_INFO CursorInfo = {};
 
 	// 타입 별로 구조체 값 설정
@@ -174,7 +173,6 @@ void CEngine::SetCursorType(const ECursorType& CursorType)
 		break;
 	}
 
-	// #2 설정
 	SetConsoleCursorInfo(StdHandle, &CursorInfo);
 }
 
@@ -184,17 +182,27 @@ void CEngine::SetCursorPosition(const FVector2& Position)
 	SetConsoleCursorPosition(StdHandle, Coord);
 }
 
-void CEngine::SetConsoleColor(const EColorType& Color)
+void CEngine::SetConsoleColor(WORD Color)
 {
-	SetConsoleTextAttribute(StdHandle, static_cast<WORD>(Color));
+	SetConsoleTextAttribute(StdHandle, Color);
 }
 
-void CEngine::PrintText(const FVector2& Position, const EColorType& Color, const std::string& Text)
+void CEngine::PrintText(const FVector2& Position, WORD Color, const std::string& Text)
 {
-	DWORD Written = 0;
+	// 위치 설정
 	COORD Coord = { static_cast<SHORT>(Position.X), static_cast<SHORT>(Position.Y) };
-	FillConsoleOutputAttribute(BackBuffer, static_cast<WORD>(Color), static_cast<DWORD>(Text.length()), Coord, &Written);
+
+	// 텍스트 색상 설정
+	DWORD Written = 0;
+	FillConsoleOutputAttribute(BackBuffer, Color, static_cast<DWORD>(Text.size()), Coord, &Written);
+
+	// 텍스트 출력
 	WriteConsoleOutputCharacterA(BackBuffer, Text.c_str(), static_cast<DWORD>(Text.size()), Coord, &Written);
+
+	// 커서를 다음 줄로 이동
+	Coord.X = 0;
+	Coord.Y += 1;
+	SetConsoleCursorPosition(StdHandle, Coord);
 }
 
 void CEngine::SetTargetFrameRate(float FrameRate)
@@ -211,20 +219,14 @@ void CEngine::QuitGame()
 
 void CEngine::ProcessInput()
 {
-	// 키 입력 확인
-	std::vector<int> KeysToCheck = { VK_ESCAPE, VK_SPACE, 'W', 'A', 'S', 'D' };
-	for (const auto& Key : KeysToCheck)
-		KeyState[Key].bIsKeyDown = GetAsyncKeyState(Key) & 0x8000 ? true : false;
+	for (int i = 0; i < 255; ++i)
+		KeyState[i].bIsKeyDown = GetAsyncKeyState(i) & 0x8000 ? true : false;
 }
 
 void CEngine::Update(float DeltaTime)
 {
 	// 레벨 업데이트
-	MainLevel->Update(DeltaTime);
-	
-	// 종료키 입력 확인
-	if (GetKeyDown(VK_ESCAPE))
-		QuitGame();
+	PersistentLevel->Update(DeltaTime);
 }
 
 void CEngine::Clear()
@@ -256,7 +258,7 @@ void CEngine::Render()
 	Clear();
 
 	// 레벨 렌더
-	MainLevel->Render();
+	PersistentLevel->Render();
 
 	// 버퍼 스왑
 	Present();

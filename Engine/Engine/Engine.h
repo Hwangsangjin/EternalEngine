@@ -28,27 +28,6 @@ public:
 		NormalCursor
 	};
 
-	// 폰트 색상
-	enum class EColorType
-	{
-		Black,
-		DarkBlue,
-		DarkGreen,
-		DarkSkyblue,
-		DarkRed,
-		DarkVoilet,
-		DakrYellow,
-		Gray,
-		DarkGray,
-		Blue,
-		Green,
-		SkyBlue,
-		Red,
-		Violet,
-		Yellow,
-		White
-	};
-
 public:
 	CEngine();
 	virtual ~CEngine();
@@ -71,15 +50,18 @@ public:
 	void AddActor(CActor* NewActor);
 	void RemoveActor(CActor* TargetActor);
 
-	// 화면 좌표 관련 함수
+	// 화면 크기 반환 함수
+	FORCEINLINE COORD GetBufferSize() const { return BufferSize; }
+
+	// 화면 좌표 설정 함수
 	void SetCursorType(const ECursorType& CursorType);
 	void SetCursorPosition(const FVector2& Position);
 
 	// 색상 설정 함수
-	void SetConsoleColor(const EColorType& Color);
+	void SetConsoleColor(WORD Color);
 
-	// 출력 관련 함수
-	void PrintText(const FVector2& Position, const EColorType& Color, const std::string& Text);
+	// 텍스트 출력 함수
+	void PrintText(const FVector2& Position, WORD Color, const std::string& Text);
 
 	// 타겟 프레임 속도 설정 함수
 	void SetTargetFrameRate(float TargetFrameRate);
@@ -122,6 +104,6 @@ protected:
 	// 싱글톤 구현을 위한 스태틱 변수
 	static CEngine* Instance;
 
-	// 메인 레벨 변수
-	CLevel* MainLevel;
+	// 퍼시스턴트 레벨 변수
+	CLevel* PersistentLevel;
 };
