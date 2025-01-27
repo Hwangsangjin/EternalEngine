@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include "Core.h"
-#include "RTTI.h"
+#include "RTTI/RTTI.h"
 
 class CActor;
 
@@ -14,9 +13,9 @@ public:
 	virtual ~CLevel();
 
 	// 액터 추가, 삭제 함수
-	void AddActor(CActor* NewActor);
-	void RemoveActor(CActor* NewActor);
-	void RemoveActorFromArray(std::vector<CActor*>& ActorArray, CActor* TargetActor);
+	void AddActor(CActor* InActor);
+	void RemoveActor(CActor* InActor);
+	void RemoveActorFromArray(std::vector<CActor*>& OutActors, CActor* InActor);
 
 	// 루프 처리 함수
 	virtual void Update(float DeltaTime);
