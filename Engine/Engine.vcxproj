@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,6 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
@@ -121,8 +125,8 @@
       <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\ /e /y</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /y
-xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
+      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /e /y
+xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,8 +135,13 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ENGINE_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,27 +149,56 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /y</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\ /e /y</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Component\BoxComponent.cpp" />
+    <ClCompile Include="Component\ActorComponent.cpp" />
     <ClCompile Include="Actor\Actor.cpp" />
-    <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Core\Core.cpp" />
+    <ClCompile Include="Component\InputComponent.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Level\Level.cpp" />
-    <ClCompile Include="Math\Vector2.cpp" />
+    <ClCompile Include="Math\Math.cpp" />
+    <ClCompile Include="Component\MoveComponent.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Precompiled\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="RTTI\RTTI.cpp" />
+    <ClCompile Include="Component\TextComponent.cpp" />
+    <ClCompile Include="String\String.cpp" />
+    <ClCompile Include="Math\Vector2.cpp" />
+    <ClCompile Include="Timer\Timer.cpp" />
+    <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\BoxComponent.h" />
+    <ClInclude Include="Component\ActorComponent.h" />
     <ClInclude Include="Actor\Actor.h" />
-    <ClInclude Include="Core.h" />
-    <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Component\InputComponent.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Level\Level.h" />
-    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Component\MoveComponent.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Precompiled\Precompiled.h" />
-    <ClInclude Include="RTTI.h" />
+    <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="RTTI\RTTI.h" />
+    <ClInclude Include="Component\TextComponent.h" />
+    <ClInclude Include="String\String.h" />
+    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Timer\Timer.h" />
+    <ClInclude Include="World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

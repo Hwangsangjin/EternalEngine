@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Engine.cpp">
+    <ClCompile Include="Core\Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Object\Object.cpp">
@@ -30,12 +30,48 @@
     <ClCompile Include="Actor\Actor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Math\Math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RTTI\RTTI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\ActorComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\TextComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\BoxComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="String\String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MoveComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\InputComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Engine.h">
+    <ClInclude Include="Core\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Object\Object.h">
@@ -50,13 +86,43 @@
     <ClInclude Include="Actor\Actor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core.h">
+    <ClInclude Include="RTTI\RTTI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RTTI.h">
+    <ClInclude Include="Math\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\ActorComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\TextComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\BoxComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="String\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MoveComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\InputComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
