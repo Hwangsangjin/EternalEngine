@@ -12,6 +12,7 @@ CCore* CCore::Instance = nullptr;
 
 CCore::CCore()
 	: bRunning(true)
+	, DeltaTime(0.0f)
 	, Timer(new CTimer)
 	, Input(new CInput)
 	, World(new CWorld)
@@ -57,7 +58,7 @@ void CCore::Run()
 	while (bRunning)
 	{
 		// 델타 타임 계산
-		const float DeltaTime = Timer->CalculateDeltaTime();
+		DeltaTime = Timer->CalculateDeltaTime();
 		
 		// 입력 처리
 		Input->ProcessInput();

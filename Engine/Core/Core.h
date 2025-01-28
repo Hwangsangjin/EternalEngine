@@ -41,6 +41,9 @@ protected:
 	// 게임 실행 플래그
 	bool bRunning;
 
+	// 델타 타임
+	float DeltaTime;
+
 	// 타이머
 	CTimer* Timer;
 
