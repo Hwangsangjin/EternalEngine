@@ -75,7 +75,7 @@ public:
 	template<typename T>
 	FORCEINLINE void GetComponents(std::vector<T*>& OutComponents) const;
 
-	// 컴포넌트 반환 함수
+	// 컴포넌트 객체 반환 함수
 	FORCEINLINE CBoxComponent* GetBoxComponent() const { return BoxComponent; }
 	FORCEINLINE CTextComponent* GetTextComponent() const { return TextComponent; }
 	FORCEINLINE CMoveComponent* GetMoveComponent() const { return MoveComponent; }
@@ -105,19 +105,17 @@ protected:
 template<typename T>
 FORCEINLINE T* CActor::AddComponent(const FString& InName)
 {
-	// 컴포넌트 배열에서 같은 타입의 컴포넌트가 이미 존재하는지 확인
+	// 같은 타입의 컴포넌트가 이미 존재하는지 확인
 	for (const auto& Component : Components)
 	{
-		// 지정된 타입으로 캐스팅 시도
-		if (auto Casted = dynamic_cast<T*>(Component))
+		if (auto TypedComponent = Component->As<T>())
 		{
-			// 동일한 이름의 컴포넌트가 존재하면 추가하지 않음
-			if (Casted->GetName() == InName)
+			if (TypedComponent->GetName() == InName)
 				return nullptr;
 		}
 	}
 
-	// 같은 타입의 컴포넌트가 없으면 새로운 컴포넌트를 생성하고 추가
+	// 새로운 컴포넌트를 생성하고, 추가
 	T* NewComponent = new T(this, InName);
 	Components.emplace_back(NewComponent);
 	return NewComponent;
@@ -126,15 +124,18 @@ FORCEINLINE T* CActor::AddComponent(const FString& InName)
 template<typename T>
 FORCEINLINE void CActor::RemoveComponent()
 {
-	// 컴포넌트 배열 순회
-	for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
+	// 지정된 타입의 컴포넌트를 찾고 메모리를 해제한 후, 삭제
+	for (auto Iter = Components.begin(); Iter != Components.end();)
 	{
-		// 해당 타입의 컴포넌트일 경우
-		if (T* Component = dynamic_cast<T*>(*Iter))
+		if (auto TypedComponent = Iter->As<T>())
 		{
-			// 해당 컴포넌트 삭제
-			Components.erase(Iter);
+			delete TypedComponent;
+			Iter = Components.erase(Iter);
 			break;
+		}
+		else
+		{
+			++Iter;
 		}
 	}
 }
@@ -142,28 +143,24 @@ FORCEINLINE void CActor::RemoveComponent()
 template<typename T>
 FORCEINLINE T* CActor::GetComponent() const
 {
-	// 컴포넌트 배열 순회
+	// 첫 번째로 찾은 해당 타입의 컴포넌트 반환
 	for (const auto& Component : Components)
 	{
-		// 지정된 타입으로 캐스팅 시도
-		if (auto Casted = dynamic_cast<T*>(Component))
-			return Casted; // 캐스팅 성공 시 해당 컴포넌트 반환
+		if (auto TypedComponent = Component->As<T>())
+			return TypedComponent;
 	}
 
-	// 지정된 타입의 컴포넌트를 찾지 못한 경우
+	// 컴포넌트를 찾지 못한 경우
 	return nullptr;
 }
-
-// 컴포넌트 배열 반환 함수
 
 template<typename T>
 FORCEINLINE void CActor::GetComponents(std::vector<T*>& OutComponents) const
 {
-	// 컴포넌트 배열 순회
+	// 해당 타입의 모든 컴포넌트를 전달된 배열에 추가
 	for (const auto& Component : Components)
 	{
-		// 지정된 타입으로 캐스팅 시도
-		if (auto Casted = dynamic_cast<T*>(Component))
-			OutComponents.emplace_back(Casted); // 캐스팅 성공 시 해당 컴포넌트를 반환 배열에 추가
+		if (auto TypedComponent = Component->As<T>())
+			OutComponents.emplace_back(TypedComponent);
 	}
 }
