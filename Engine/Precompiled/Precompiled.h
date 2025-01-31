@@ -9,11 +9,13 @@
 #include <cassert>
 #include <sstream>
 #include <iostream>
+#include <filesystem>
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <array>
 #include <deque>
+#include <map>
 
 #include "Math/Math.h"
 #include "Math/Vector2.h"
