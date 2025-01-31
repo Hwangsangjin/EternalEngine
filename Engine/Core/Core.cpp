@@ -1,11 +1,12 @@
 ﻿#include "Precompiled.h"
 #include "Core.h"
+#include "World/World.h"
 #include "Level/Level.h"
 #include "Actor/Actor.h"
-#include "Timer/Timer.h"
-#include "Input/Input.h"
-#include "World/World.h"
-#include "Renderer/Renderer.h"
+#include "System/TimerSystem.h"
+#include "System/InputSystem.h"
+#include "System/AudioSystem.h"
+#include "System/RenderSystem.h"
 
 // 스태틱 변수 초기화
 CCore* CCore::Instance = nullptr;
@@ -13,10 +14,11 @@ CCore* CCore::Instance = nullptr;
 CCore::CCore()
 	: bRunning(true)
 	, DeltaTime(0.0f)
-	, Timer(new CTimer)
-	, Input(new CInput)
 	, World(new CWorld)
-	, Renderer(new CRenderer)
+	, TimerSystem(new CTimerSystem)
+	, InputSystem(new CInputSystem)
+	, AudioSystem(new CAudioSystem)
+	, RenderSystem(new CRenderSystem)
 {
 	// 싱글톤 객체 설정
 	Instance = this;
@@ -27,22 +29,25 @@ CCore::CCore()
 
 CCore::~CCore()
 {
-	delete Timer;
-	Timer = nullptr;
-
-	delete Input;
-	Input = nullptr;
-
+	// 월드 메모리 해제
 	delete World;
 	World = nullptr;
 
-	delete Renderer;
-	Renderer = nullptr;
-}
+	// 타이머 시스템 메모리 해제
+	delete TimerSystem;
+	TimerSystem = nullptr;
 
-CCore& CCore::Get()
-{
-	return *Instance;
+	// 입력 시스템 메모리 해제
+	delete InputSystem;
+	InputSystem = nullptr;
+
+	// 오디오 시스템 메모리 해제
+	delete AudioSystem;
+	AudioSystem = nullptr;
+
+	// 렌더 시스템 메모리 해제
+	delete RenderSystem;
+	RenderSystem = nullptr;
 }
 
 void CCore::Run()
@@ -52,22 +57,22 @@ void CCore::Run()
 		return;
 
 	// 목표 프레임 설정
-	Timer->SetTargetFPS(60.0f);
+	TimerSystem->SetTargetFPS(60.0f);
 
 	// 게임 루프
 	while (bRunning)
 	{
 		// 델타 타임 계산
-		DeltaTime = Timer->CalculateDeltaTime();
+		DeltaTime = TimerSystem->CalculateDeltaTime();
 		
 		// 입력 처리
-		Input->ProcessInput();
+		InputSystem->ProcessInput();
 
 		// 업데이트
 		World->Update(DeltaTime);
 
 		// 렌더
-		Renderer->Render();
+		RenderSystem->Render();
 	}
 }
 

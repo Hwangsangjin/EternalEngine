@@ -113,16 +113,18 @@
       <PreprocessorDefinitions>_ENGINE_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\;$(SolutionDir)Include\;$(SolutionDir)Include\FMOD\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>fmod64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\ /e /y</Command>
+      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\$(ProjectName)\ /e /y</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /e /y
@@ -138,7 +140,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
       <PreprocessorDefinitions>_ENGINE_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Precompiled\;$(SolutionDir)Include\;$(SolutionDir)Include\FMOD\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -148,12 +150,14 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\ /e /y</Command>
+      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\$(ProjectName)\ /e /y</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /y</Command>
+      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /e /y
+xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -162,7 +166,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClCompile Include="Actor\Actor.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Component\InputComponent.cpp" />
-    <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="System\InputSystem.cpp" />
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Component\MoveComponent.cpp" />
@@ -172,12 +176,13 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="System\RenderSystem.cpp" />
     <ClCompile Include="RTTI\RTTI.cpp" />
     <ClCompile Include="Component\TextComponent.cpp" />
+    <ClCompile Include="System\AudioSystem.cpp" />
     <ClCompile Include="String\String.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
-    <ClCompile Include="Timer\Timer.cpp" />
+    <ClCompile Include="System\TimerSystem.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,18 +191,19 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClInclude Include="Actor\Actor.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Component\InputComponent.h" />
-    <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="System\InputSystem.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Component\MoveComponent.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Precompiled\Precompiled.h" />
-    <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="System\RenderSystem.h" />
     <ClInclude Include="RTTI\RTTI.h" />
     <ClInclude Include="Component\TextComponent.h" />
+    <ClInclude Include="System\AudioSystem.h" />
     <ClInclude Include="String\String.h" />
     <ClInclude Include="Math\Vector2.h" />
-    <ClInclude Include="Timer\Timer.h" />
+    <ClInclude Include="System\TimerSystem.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

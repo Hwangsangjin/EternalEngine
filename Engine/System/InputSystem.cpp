@@ -1,12 +1,12 @@
 ﻿#include "Precompiled.h"
-#include "Input.h"
+#include "InputSystem.h"
 
-CInput::CInput()
+CInputSystem::CInputSystem()
 {
 	KeyStates.fill(EKeyState::None);
 }
 
-void CInput::ProcessInput()
+void CInputSystem::ProcessInput()
 {
 	for (SHORT i = 0; i < KeyStates.size(); ++i)
 	{
@@ -27,17 +27,17 @@ void CInput::ProcessInput()
 	}
 }
 
-bool CInput::GetKey(size_t InIndex) const
+bool CInputSystem::GetKey(size_t InIndex) const
 {
 	return KeyStates[InIndex] == EKeyState::Down || KeyStates[InIndex] == EKeyState::Hold;
 }
 
-bool CInput::GetKeyDown(size_t InIndex) const
+bool CInputSystem::GetKeyDown(size_t InIndex) const
 {
 	return KeyStates[InIndex] == EKeyState::Down;
 }
 
-bool CInput::GetKeyUp(size_t InIndex) const
+bool CInputSystem::GetKeyUp(size_t InIndex) const
 {
 	return KeyStates[InIndex] == EKeyState::Up;
 }

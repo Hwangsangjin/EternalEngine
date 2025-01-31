@@ -1,7 +1,7 @@
 ﻿#include "Precompiled.h"
 #include "InputComponent.h"
 #include "Core/Core.h"
-#include "Input/Input.h"
+#include "System/InputSystem.h"
 
 CInputComponent::CInputComponent(CActor* InActor, const FString& InName)
 	: Super(InActor, InName)
@@ -24,10 +24,10 @@ void CInputComponent::Update(float DeltaTime)
 	// 각 속도 계산
 	float AngularSpeed = 0.0f;
 
-	if (CCore::Get().GetInput()->GetKey(ClockwiseKey))
+	if (CCore::Get().GetInputSystem()->GetKey(ClockwiseKey))
 		AngularSpeed += AngularAcceleration * DeltaTime;
 
-	if (CCore::Get().GetInput()->GetKey(CounterClockwiseKey))
+	if (CCore::Get().GetInputSystem()->GetKey(CounterClockwiseKey))
 		AngularSpeed -= AngularAcceleration * DeltaTime;
 
 	SetAngularSpeed(AngularSpeed);
@@ -35,10 +35,10 @@ void CInputComponent::Update(float DeltaTime)
 	// 전방 속도 계산
 	float ForwardSpeed = 0.0f;
 
-	if (CCore::Get().GetInput()->GetKey(ForwardKey))
+	if (CCore::Get().GetInputSystem()->GetKey(ForwardKey))
 		ForwardSpeed += ForwardAcceleration * DeltaTime;
 
-	if (CCore::Get().GetInput()->GetKey(BackwardKey))
+	if (CCore::Get().GetInputSystem()->GetKey(BackwardKey))
 		ForwardSpeed -= ForwardAcceleration * DeltaTime;
 
 	SetForwardSpeed(ForwardSpeed);
@@ -46,10 +46,10 @@ void CInputComponent::Update(float DeltaTime)
 	// 우측 속도 계산
 	float RightSpeed = 0.0f;
 
-	if (CCore::Get().GetInput()->GetKey(LeftKey))
+	if (CCore::Get().GetInputSystem()->GetKey(LeftKey))
 		RightSpeed -= RightAcceleration * DeltaTime;
 
-	if (CCore::Get().GetInput()->GetKey(RightKey))
+	if (CCore::Get().GetInputSystem()->GetKey(RightKey))
 		RightSpeed += RightAcceleration * DeltaTime;
 
 	SetRightSpeed(RightSpeed);

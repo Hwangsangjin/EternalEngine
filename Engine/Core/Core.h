@@ -1,11 +1,12 @@
 ﻿#pragma once
 
+class CWorld;
 class CLevel;
 class CActor;
-class CTimer;
-class CInput;
-class CWorld;
-class CRenderer;
+class CTimerSystem;
+class CInputSystem;
+class CAudioSystem;
+class CRenderSystem;
 
 class ENGINE_API CCore
 {
@@ -13,13 +14,10 @@ public:
 	CCore();
 	virtual ~CCore();
 
-	// 싱글톤 객체 접근 함수
-	static CCore& Get();
-
-	// 게임 실행 함수
+	// 실행 함수
 	void Run();
 
-	// 게임 종료 함수
+	// 종료 함수
 	void QuitGame();
 
 	// 레벨 추가 함수
@@ -29,30 +27,34 @@ public:
 	void AddActor(CActor* InActor);
 	void RemoveActor(CActor* InActor);
 
-	FORCEINLINE CTimer* GetTimer() const { return Timer; }
-	FORCEINLINE CInput* GetInput() const { return Input; }
+	// 싱글톤 객체 접근 함수
+	FORCEINLINE static CCore& Get() { return *Instance; }
+
+	// 월드 반환 함수
 	FORCEINLINE CWorld* GetWorld() const { return World; }
-	FORCEINLINE CRenderer* GetRenderer() const { return Renderer; }
+
+	// 시스템 반환 함수
+	FORCEINLINE CTimerSystem* GetTimerSystem() const { return TimerSystem; }
+	FORCEINLINE CInputSystem* GetInputSystem() const { return InputSystem; }
+	FORCEINLINE CAudioSystem* GetAudioSystem() const { return AudioSystem; }
+	FORCEINLINE CRenderSystem* GetRenderSystem() const { return RenderSystem; }
 
 protected:
 	// 싱글톤 구현을 위한 정적 인스턴스
 	static CCore* Instance;
 
-	// 게임 실행 플래그
+	// 실행 플래그
 	bool bRunning;
 
 	// 델타 타임
 	float DeltaTime;
 
-	// 타이머
-	CTimer* Timer;
-
-	// 입력
-	CInput* Input;
+	// 시스템
+	CTimerSystem* TimerSystem;
+	CInputSystem* InputSystem;
+	CAudioSystem* AudioSystem;
+	CRenderSystem* RenderSystem;
 
 	// 월드
 	CWorld* World;
-
-	// 렌더러
-	CRenderer* Renderer;
 };

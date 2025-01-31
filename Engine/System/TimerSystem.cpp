@@ -1,8 +1,7 @@
 ﻿#include "Precompiled.h"
-#include "Timer.h"
-#include <chrono>
+#include "TimerSystem.h"
 
-CTimer::CTimer()
+CTimerSystem::CTimerSystem()
 	: Frequency()
 	, CurrentTime()
 	, PreviousTime()
@@ -14,7 +13,7 @@ CTimer::CTimer()
 	QueryPerformanceCounter(&PreviousTime);
 }
 
-float CTimer::CalculateDeltaTime()
+float CTimerSystem::CalculateDeltaTime()
 {
 	do
 	{

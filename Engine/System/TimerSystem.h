@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-class ENGINE_API CTimer
+class ENGINE_API CTimerSystem
 {
 public:
-	CTimer();
+	CTimerSystem();
 
 	float CalculateDeltaTime();
 

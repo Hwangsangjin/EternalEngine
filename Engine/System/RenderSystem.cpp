@@ -1,9 +1,9 @@
 ﻿#include "Precompiled.h"
-#include "Renderer.h"
+#include "RenderSystem.h"
 #include "Core/Core.h"
 #include "World/World.h"
 
-CRenderer::CRenderer()
+CRenderSystem::CRenderSystem()
 	: StdHandle(GetStdHandle(STD_OUTPUT_HANDLE))
 	, FrontBuffer(INVALID_HANDLE_VALUE)
 	, BackBuffer(INVALID_HANDLE_VALUE)
@@ -30,7 +30,7 @@ CRenderer::CRenderer()
 	SetCursorType(ECursorType::Hidden);
 }
 
-CRenderer::~CRenderer()
+CRenderSystem::~CRenderSystem()
 {
 	// 화면 버퍼 메모리 해제
 	if (FrontBuffer != INVALID_HANDLE_VALUE)
@@ -39,7 +39,7 @@ CRenderer::~CRenderer()
 		CloseHandle(BackBuffer);
 }
 
-void CRenderer::SetCursorType(const ECursorType& InCursorType)
+void CRenderSystem::SetCursorType(const ECursorType& InCursorType)
 {
 	CONSOLE_CURSOR_INFO CursorInfo = {};
 
@@ -64,7 +64,7 @@ void CRenderer::SetCursorType(const ECursorType& InCursorType)
 	SetConsoleCursorInfo(BackBuffer, &CursorInfo);
 }
 
-void CRenderer::PrintText(const FVector2& InPosition, const FString& InText, const EColor& InColor)
+void CRenderSystem::PrintText(const FVector2& InPosition, const FString& InText, const EColor& InColor)
 {
 	// 텍스트 길이
 	const DWORD Length = static_cast<DWORD>(InText.GetWideString().length());
@@ -82,7 +82,7 @@ void CRenderer::PrintText(const FVector2& InPosition, const FString& InText, con
 	WriteConsoleOutputCharacterW(BackBuffer, InText.GetWideString().c_str(), Length, Coord, &Written);
 }
 
-void CRenderer::Render()
+void CRenderSystem::Render()
 {
 	// 화면 지우기
 	Clear();
@@ -94,7 +94,7 @@ void CRenderer::Render()
 	Present();
 }
 
-void CRenderer::Clear()
+void CRenderSystem::Clear()
 {
 	// 콘솔 버퍼 크기에 맞는 전체 문자 개수 계산
 	const DWORD Length = BufferSize.X * BufferSize.Y;
@@ -112,7 +112,7 @@ void CRenderer::Clear()
 	FillConsoleOutputAttribute(BackBuffer, BufferInfo.wAttributes, Length, Coord, &Written);
 }
 
-void CRenderer::Present()
+void CRenderSystem::Present()
 {
 	// 백 버퍼 활성화
 	SetConsoleActiveScreenBuffer(BackBuffer);

@@ -1,12 +1,10 @@
 ﻿#pragma once
 
-class CLevel;
-
-class ENGINE_API CRenderer
+class ENGINE_API CRenderSystem
 {
 public:
-    CRenderer();
-    ~CRenderer();
+    CRenderSystem();
+    ~CRenderSystem();
 
 	void Render();
 

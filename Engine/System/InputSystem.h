@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-class ENGINE_API CInput
+class ENGINE_API CInputSystem
 {
 public:
-	CInput();
+	CInputSystem();
 
 	// 키 상태 갱신
 	void ProcessInput();

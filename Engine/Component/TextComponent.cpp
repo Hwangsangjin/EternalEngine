@@ -2,7 +2,7 @@
 #include "TextComponent.h"
 #include "Actor/Actor.h"
 #include "Core/Core.h"
-#include "Renderer/Renderer.h"
+#include "System/RenderSystem.h"
 
 CTextComponent::CTextComponent(CActor* InActor, const FString& InName)
 	: Super(InActor, InName)
@@ -15,5 +15,5 @@ void CTextComponent::Render()
 {
 	Super::Render();
 
-	CCore::Get().GetRenderer()->PrintText(Owner->GetPosition(), String, Color);
+	CCore::Get().GetRenderSystem()->PrintText(Owner->GetPosition(), String, Color);
 }
