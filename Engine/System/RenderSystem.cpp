@@ -7,7 +7,7 @@ CRenderSystem::CRenderSystem()
 	: StdHandle(GetStdHandle(STD_OUTPUT_HANDLE))
 	, FrontBuffer(INVALID_HANDLE_VALUE)
 	, BackBuffer(INVALID_HANDLE_VALUE)
-	, BufferSize(COORD(80, 30))
+	, BufferSize(COORD(50, 20))
 	, BufferInfo()
 {
 	// 스크린 버퍼 생성
@@ -32,7 +32,7 @@ CRenderSystem::CRenderSystem()
 
 CRenderSystem::~CRenderSystem()
 {
-	// 화면 버퍼 메모리 해제
+	// 스크린 버퍼 메모리 해제
 	if (FrontBuffer != INVALID_HANDLE_VALUE)
 		CloseHandle(FrontBuffer);
 	if (BackBuffer != INVALID_HANDLE_VALUE)
