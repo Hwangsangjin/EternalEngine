@@ -7,8 +7,7 @@ struct FMath
 	{
 		if constexpr (std::is_integral<T>::value)
 		{
-			T RangeDiff = (InMax - InMin) + 1;
-			return ((RangeDiff * rand()) / (RAND_MAX + 1)) + InMin;
+			return (rand() % (InMax - InMin + 1)) + InMin;
 		}
 		else if constexpr (std::is_floating_point<T>::value)
 		{
