@@ -36,6 +36,28 @@ public:
         return WideString == InString.WideString;
     }
 
+    // 문자열 비교 연산자
+    FORCEINLINE bool operator<(const FString& InString) const
+    {
+        return WideString < InString.WideString;
+    }
+
+    // 문자열 덧셈 연산자
+    FORCEINLINE FString operator+(const FString& InString)
+    {
+        FString Result = *this;
+        Result.Append(InString);
+        return Result;
+    }
+
+    // 문자열 덧셈 연산자
+    FORCEINLINE friend FString operator+(const FString& InString1, const FString& InString2)
+    {
+        FString Result = InString1;
+        Result.Append(InString2);
+        return Result;
+    }
+
     // 문자열을 출력하는 함수
     FORCEINLINE void Print() const
     {
