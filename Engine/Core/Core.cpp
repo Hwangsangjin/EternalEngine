@@ -76,7 +76,7 @@ void CCore::Run()
 	}
 }
 
-void CCore::QuitGame()
+void CCore::Quit()
 {
 	// 실행 플래그 설정
 	bRunning = false;

@@ -14,11 +14,9 @@ public:
 	CCore();
 	virtual ~CCore();
 
-	// 실행 함수
+	// 실행, 종료 함수
 	void Run();
-
-	// 종료 함수
-	void QuitGame();
+	void Quit();
 
 	// 레벨 추가 함수
 	void LoadLevel(CLevel* InLevel);
