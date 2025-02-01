@@ -10,7 +10,10 @@ CWorld::CWorld()
 CWorld::~CWorld()
 {
 	if (PersistentLevel)
+	{
 		delete PersistentLevel;
+		PersistentLevel = nullptr;
+	}
 }
 
 void CWorld::Update(float DeltaTime)
