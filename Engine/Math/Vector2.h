@@ -1,17 +1,19 @@
 ﻿#pragma once
 
-#include "String/String.h"
+class FString;
 
-struct FVector2
+struct ENGINE_API FVector2
 {
 	FORCEINLINE constexpr FVector2() = default;
 
 	FORCEINLINE explicit constexpr FVector2(int InX, int InY)
-		: X(static_cast<float>(InX)), Y(static_cast<float>(InY))
+		: X(static_cast<float>(InX))
+		, Y(static_cast<float>(InY))
 	{}
 
 	FORCEINLINE explicit constexpr FVector2(float InX, float InY)
-		: X(InX), Y(InY)
+		: X(InX)
+		, Y(InY)
 	{}
 
 	FORCEINLINE constexpr float operator[](unsigned char InIndex) const
@@ -135,10 +137,16 @@ struct FVector2
 		if (SquareSum == 1.0f)
 			return *this;
 		else if (SquareSum == 0.0f)
-			return FVector2(0.0f, 0.0f);
+			return FVector2::Zero;
 
 		float InvLength = FMath::InvSqrt(SquareSum);
 		return FVector2(X, Y) * InvLength;
+	}
+
+	FORCEINLINE constexpr bool IsNearlyEqual(const FVector2& InVector, float InTolerance = FMath::Epsilon) const
+	{
+		return (FMath::Abs(X - InVector.X) <= InTolerance) &&
+			(FMath::Abs(Y - InVector.Y) < InTolerance);
 	}
 
 	FORCEINLINE constexpr float Max() const
@@ -173,22 +181,15 @@ struct FVector2
 		return FVector2(X * Cos, X * Sin);
 	}
 
-	FString ToString() const
-	{
-		return FString::Printf(TEXT("(%f, %f)"), X, Y);
-	}
+	FString ToString() const;
 
-	friend FString& operator<<(FString& InString, const FVector2& InVector)
-	{
-		InString = InVector.ToString();
-		return InString;
-	}
+	friend FString& operator<<(FString& InString, const FVector2& InVector);
 
 	static const FVector2 UnitX;
 	static const FVector2 UnitY;
 	static const FVector2 One;
 	static const FVector2 Zero;
-	static constexpr unsigned char Dimension = 2;
+	static constexpr BYTE Dimension = 2;
 
 	union
 	{
