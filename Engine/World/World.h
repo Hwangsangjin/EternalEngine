@@ -2,14 +2,13 @@
 
 class CLevel;
 
-class CWorld
+class ENGINE_API CWorld
 {
 public:
 	CWorld();
 	~CWorld();
 
 	void Update(float DeltaTime);
-	void Render();
 
 	void LoadLevel(CLevel* InLevel);
 

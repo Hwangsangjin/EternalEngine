@@ -21,11 +21,6 @@ void CWorld::Update(float DeltaTime)
 	PersistentLevel->Update(DeltaTime);
 }
 
-void CWorld::Render()
-{
-	PersistentLevel->Render();
-}
-
 void CWorld::LoadLevel(CLevel* InLevel)
 {
 	// 로드한 레벨이 널인 경우 리턴
