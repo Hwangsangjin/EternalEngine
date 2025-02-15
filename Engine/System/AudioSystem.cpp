@@ -25,7 +25,7 @@ CAudioSystem::~CAudioSystem()
     System->release();
 }
 
-FString CAudioSystem::GetResourcePath(const FString& FileName)
+FString CAudioSystem::GetSoundPath(const FString& FileName)
 {
     // 현재 실행 파일 경로
     std::filesystem::path CurrentPath = std::filesystem::current_path();
@@ -52,7 +52,7 @@ void CAudioSystem::CreateSound(const FString& FileName, const FString& SoundName
         return;
 
     // 사운드 파일 경로 가져오기
-    FString SoundPath = GetResourcePath(FileName);
+    FString SoundPath = GetSoundPath(FileName);
 
     // 새로운 FMOD 사운드 객체 생성
     FMOD::Sound* NewSound = nullptr;

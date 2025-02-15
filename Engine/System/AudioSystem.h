@@ -13,7 +13,7 @@ public:
 	CAudioSystem();
 	~CAudioSystem();
 
-	FString GetResourcePath(const FString& FileName);
+	FString GetSoundPath(const FString& FileName);
 
 	void CreateSound(const FString& FileName, const FString& SoundName, bool bLoop = false);
 
