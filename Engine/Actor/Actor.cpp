@@ -4,19 +4,14 @@
 #include "Component/TextComponent.h"
 #include "Component/MoveComponent.h"
 
-CActor::CActor(const FVector2& InPosition, const FVector2& InSize, const FString& InText)
+CActor::CActor()
 	: State(EState::Active)
-	, Position(InPosition)
-	, Scale(0.0f)
+	, Position(FVector2::Zero)
+	, Scale(1.0f)
 	, Rotation(0.0f)
 {
 	BoxComponent = AddComponent<CBoxComponent>(TEXT("BoxComponent"));
-	BoxComponent->SetPosition(InPosition);
-	BoxComponent->SetSize(InSize);
-
 	TextComponent = AddComponent<CTextComponent>(TEXT("TextComponent"));
-	TextComponent->SetString(InText);
-
 	MoveComponent = AddComponent<CMoveComponent>(TEXT("MoveComponent"));
 }
 

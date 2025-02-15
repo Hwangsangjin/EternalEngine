@@ -20,7 +20,7 @@ public:
 	};
 
 public:
-	CActor(const FVector2& InPosition, const FVector2& InSize, const FString& InText);
+	CActor();
 	virtual ~CActor();
 
 	// 루프 처리 함수
