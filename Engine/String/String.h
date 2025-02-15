@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-class FString
+class ENGINE_API FString
 {
 public:
     // 기본 생성자
