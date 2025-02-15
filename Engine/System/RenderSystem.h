@@ -1,5 +1,13 @@
 ﻿#pragma once
 
+class FRHI;
+class FDrawCommand;
+class FCommandQueue;
+class FVertexBuffer;
+class FIndexBuffer;
+class FStaticMesh;
+class FMaterial;
+
 class ENGINE_API CRenderSystem
 {
 public:
@@ -8,26 +16,26 @@ public:
 
 	void Render();
 
-	// 화면 크기 반환 함수
-	FORCEINLINE COORD GetBufferSize() const { return BufferSize; }
+    void EnqueueCommand(FDrawCommand* RenderCommand);
 
-	// 커서 설정 함수
-	void SetCursorType(const ECursorType& InCursorType);
+	FVertexBuffer* CreateVertexBuffer(UINT Size, const void* Data = nullptr);
+	FIndexBuffer* CreateIndexBuffer(UINT Size, const void* Data = nullptr);
+	void SetVertexBuffer(FVertexBuffer* VertexBuffer, UINT Stride, UINT Offset);
+	void SetIndexBuffer(FIndexBuffer* IndexBuffer);
 
-	// 텍스트 출력 함수
-	void PrintText(const FVector2& InPosition, const FString& InText, const EColor& InColor = EColor::White);
+	void DrawPoint(const FVector2& InPosition, const FLinearColor& InColor);
+	void DrawPoint(const FScreenPoint& InPosition, const FLinearColor& InColor);
+	void DrawLine(const FVector2& InStartPosition, const FVector2& InEndPosition, const FLinearColor& InColor);
+#undef DrawText
+	void DrawText(const FVector2& InPosition, const FString& InText, const FLinearColor& InColor);
+	void DrawStaticMesh(FStaticMesh* InStaticMesh, const std::vector<FMaterial*>& InMaterials);
 
-protected:
-	void Clear();
-	void Present();
+	FORCEINLINE FRHI* GetRHI() const { return RHI; }
 
 private:
-	// 표준 디바이스 핸들
-	HANDLE StdHandle;
+	// RHI
+	FRHI* RHI;
 
-	// 더블 버퍼링 변수
-	HANDLE FrontBuffer;
-	HANDLE BackBuffer;
-	COORD BufferSize;
-	CONSOLE_SCREEN_BUFFER_INFO BufferInfo;
+	// 커맨드 큐
+	FCommandQueue* CommandQueue;
 };

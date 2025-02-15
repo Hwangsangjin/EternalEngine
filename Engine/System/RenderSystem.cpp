@@ -2,121 +2,114 @@
 #include "RenderSystem.h"
 #include "Core/Core.h"
 #include "World/World.h"
+#include "Level/Level.h"
+#include "RHI/RHIFactory.h"
+#include "RHI/RHI.h"
+#include "Command/DrawCommand.h"
+#include "Command/CommandQueue.h"
 
 CRenderSystem::CRenderSystem()
-	: StdHandle(GetStdHandle(STD_OUTPUT_HANDLE))
-	, FrontBuffer(INVALID_HANDLE_VALUE)
-	, BackBuffer(INVALID_HANDLE_VALUE)
-	, BufferSize(COORD(50, 20))
-	, BufferInfo()
+	: RHI(FRHIFactory::CreateRHI())
+	, CommandQueue(new FCommandQueue)
 {
-	// 스크린 버퍼 생성
-	FrontBuffer = CreateConsoleScreenBuffer(GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-	BackBuffer = CreateConsoleScreenBuffer(GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-
-	// 스크린 버퍼 크기 설정
-	SetConsoleScreenBufferSize(FrontBuffer, BufferSize);
-	SetConsoleScreenBufferSize(BackBuffer, BufferSize);
-
-	// 창 크기 설정
-	SMALL_RECT Rect = { 0, 0, BufferSize.X - 1, BufferSize.Y - 1 };
-	SetConsoleWindowInfo(FrontBuffer, true, &Rect);
-	SetConsoleWindowInfo(BackBuffer, true, &Rect);
-
-	// 활성 버퍼 설정
-	SetConsoleActiveScreenBuffer(FrontBuffer);
-
-	// 커서 타입 설정
-	SetCursorType(ECursorType::Hidden);
 }
 
 CRenderSystem::~CRenderSystem()
 {
-	// 스크린 버퍼 메모리 해제
-	if (FrontBuffer != INVALID_HANDLE_VALUE)
-		CloseHandle(FrontBuffer);
-	if (BackBuffer != INVALID_HANDLE_VALUE)
-		CloseHandle(BackBuffer);
-}
-
-void CRenderSystem::SetCursorType(const ECursorType& InCursorType)
-{
-	CONSOLE_CURSOR_INFO CursorInfo = {};
-
-	// 타입 별로 구조체 값 설정
-	switch (InCursorType)
+	// RHI 리소스 해제
+	if (RHI)
 	{
-	case ECursorType::Hidden:
-		CursorInfo.dwSize = 1;
-		CursorInfo.bVisible = FALSE;
-		break;
-	case ECursorType::Solid:
-		CursorInfo.dwSize = 100;
-		CursorInfo.bVisible = TRUE;
-		break;
-	case ECursorType::Normal:
-		CursorInfo.dwSize = 20;
-		CursorInfo.bVisible = TRUE;
-		break;
+		delete RHI;
+		RHI = nullptr;
 	}
 
-	SetConsoleCursorInfo(FrontBuffer, &CursorInfo);
-	SetConsoleCursorInfo(BackBuffer, &CursorInfo);
-}
-
-void CRenderSystem::PrintText(const FVector2& InPosition, const FString& InText, const EColor& InColor)
-{
-	// 텍스트 길이
-	const DWORD Length = static_cast<DWORD>(InText.GetWideString().length());
-
-	// 출력 위치
-	const COORD Coord = { static_cast<SHORT>(InPosition.X), static_cast<SHORT>(InPosition.Y) };
-
-	// 출력된 문자 또는 속성의 수
-	DWORD Written = 0;
-
-	// 콘솔 색상 설정
-	FillConsoleOutputAttribute(BackBuffer, static_cast<WORD>(InColor), Length, Coord, &Written);
-
-	// 문자열 전체를 한 번에 출력
-	WriteConsoleOutputCharacterW(BackBuffer, InText.GetWideString().c_str(), Length, Coord, &Written);
+	// 커맨드 큐 해제
+	if (CommandQueue)
+	{
+		delete CommandQueue;
+		CommandQueue = nullptr;
+	}
 }
 
 void CRenderSystem::Render()
 {
 	// 화면 지우기
-	Clear();
+	RHI->Clear();
 
-	// 월드 그리기
-	CCore::Get().GetWorld()->Render();
+	// 레벨의 렌더 함수 호출하기
+	CCore::Get().GetWorld()->GetPersistentLevel()->Render();
+
+	// 커맨드 큐에 있는 명령 실행하기
+	CommandQueue->ExecuteAll();
 
 	// 버퍼 변경하기
-	Present();
+	RHI->Present();
 }
 
-void CRenderSystem::Clear()
+void CRenderSystem::EnqueueCommand(FDrawCommand* DrawCommand)
 {
-	// 콘솔 버퍼 크기에 맞는 전체 문자 개수 계산
-	const DWORD Length = BufferSize.X * BufferSize.Y;
-
-	// 콘솔 좌표를 (0, 0)으로 설정 (시작 위치)
-	constexpr COORD Coord = { 0, 0 };
-
-	// 출력된 문자 또는 속성의 수
-	DWORD Written = 0;
-
-	// 백 버퍼를 공백 문자로 채우기 (콘솔에 출력된 내용을 비우기 위해)
-	FillConsoleOutputCharacter(BackBuffer, ' ', Length, Coord, &Written);
-
-	// 백 버퍼의 색상 속성 초기화 (기본 색상으로 설정)
-	FillConsoleOutputAttribute(BackBuffer, BufferInfo.wAttributes, Length, Coord, &Written);
+	if (CommandQueue)
+		CommandQueue->Enqueue(DrawCommand);
 }
 
-void CRenderSystem::Present()
+FVertexBuffer* CRenderSystem::CreateVertexBuffer(UINT Size, const void* Data)
 {
-	// 백 버퍼 활성화
-	SetConsoleActiveScreenBuffer(BackBuffer);
+	FVertexBuffer* VertexBuffer = nullptr;
 
-	// 페이지 플리핑
-	std::swap(FrontBuffer, BackBuffer);
+	if (RHI)
+		VertexBuffer = RHI->CreateVertexBuffer(Size, Data);
+
+	return VertexBuffer;
+}
+
+FIndexBuffer* CRenderSystem::CreateIndexBuffer(UINT Size, const void* Data)
+{
+	FIndexBuffer* IndexBuffer = nullptr;
+
+	if (RHI)
+		IndexBuffer = RHI->CreateIndexBuffer(Size, Data);
+
+	return IndexBuffer;
+}
+
+void CRenderSystem::SetVertexBuffer(FVertexBuffer* VertexBuffer, UINT Stride, UINT Offset)
+{
+	if (RHI)
+		RHI->SetVertexBuffer(VertexBuffer, Stride, Offset);
+}
+
+void CRenderSystem::SetIndexBuffer(FIndexBuffer* IndexBuffer)
+{
+	if (RHI)
+		RHI->SetIndexBuffer(IndexBuffer);
+}
+
+void CRenderSystem::DrawPoint(const FVector2& InPosition, const FLinearColor& InColor)
+{
+	if (RHI)
+		RHI->DrawPoint(InPosition, InColor);
+}
+
+void CRenderSystem::DrawPoint(const FScreenPoint& InPosition, const FLinearColor& InColor)
+{
+	if (RHI)
+		RHI->DrawPoint(InPosition, InColor);
+}
+
+void CRenderSystem::DrawLine(const FVector2& InStartPosition, const FVector2& InEndPosition, const FLinearColor& InColor)
+{
+	if (RHI)
+		RHI->DrawLine(InStartPosition, InEndPosition, InColor);
+}
+
+void CRenderSystem::DrawText(const FVector2& InPosition, const FString& InText, const FLinearColor& InColor)
+{
+	if (RHI)
+		RHI->DrawText(InPosition, InText, InColor);
+}
+
+void CRenderSystem::DrawStaticMesh(FStaticMesh* InStaticMesh, const std::vector<FMaterial*>& InMaterials)
+{
+	if (RHI)
+		RHI->DrawStaticMesh(InStaticMesh, InMaterials);
 }
