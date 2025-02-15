@@ -15,13 +15,13 @@ public:
 	FORCEINLINE const FString& GetString() const { return String; }
 	FORCEINLINE void SetString(const FString& InString) { String = InString; }
 
-	FORCEINLINE const EColor& GetColor() const { return Color; }
-	FORCEINLINE void SetColor(const EColor& InColor) { Color = InColor; }
+	FORCEINLINE const FLinearColor& GetColor() const { return Color; }
+	FORCEINLINE void SetColor(const FLinearColor& InColor) { Color = InColor; }
 
 private:
 	// 문자열
 	FString String;
 
 	// 색상
-	EColor Color;
+	FLinearColor Color;
 };
