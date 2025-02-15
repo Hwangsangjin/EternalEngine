@@ -5,7 +5,7 @@
 CBoxComponent::CBoxComponent(CActor* InActor, const FString& InName)
     : Super(InActor, InName)
     , Position(FVector2::Zero)
-    , Size(FVector2::Zero)
+    , Size(FVector2::One)
 {
 }
 
