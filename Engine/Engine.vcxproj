@@ -120,7 +120,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>fmod64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;fmod64_vc.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Library</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -161,11 +161,31 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Command\DrawPointCommand.cpp" />
+    <ClCompile Include="Command\DrawStaticMeshCommand.cpp" />
+    <ClCompile Include="Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="Buffer\DirectX11VertexBuffer.cpp" />
+    <ClCompile Include="Buffer\DirectX11IndexBuffer.cpp" />
+    <ClCompile Include="Math\HSVColor.cpp" />
+    <ClCompile Include="Material\Material.cpp" />
+    <ClCompile Include="Material\DirectX11Material.cpp" />
+    <ClCompile Include="Math\Color32.cpp" />
+    <ClCompile Include="Command\CommandQueue.cpp" />
     <ClCompile Include="Component\BoxComponent.cpp" />
     <ClCompile Include="Component\ActorComponent.cpp" />
     <ClCompile Include="Actor\Actor.cpp" />
+    <ClCompile Include="Command\DrawCommand.cpp" />
+    <ClCompile Include="Command\DrawTextCommand.cpp" />
+    <ClCompile Include="Math\LinearColor.cpp" />
+    <ClCompile Include="Mesh\StaticMesh.cpp" />
+    <ClCompile Include="Component\StaticMeshComponent.cpp" />
+    <ClCompile Include="RHI\RHIFactory.cpp" />
+    <ClCompile Include="RHI\DirectX11RHI.cpp" />
+    <ClCompile Include="RHI\ConsoleRHI.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Component\InputComponent.cpp" />
+    <ClCompile Include="RHI\RHI.cpp" />
+    <ClCompile Include="Math\ScreenPoint.cpp" />
     <ClCompile Include="System\InputSystem.cpp" />
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Math\Math.cpp" />
@@ -183,14 +203,40 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClCompile Include="String\String.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="System\TimerSystem.cpp" />
+    <ClCompile Include="RHI\WindowsRHI.cpp" />
+    <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Math\Vector4.cpp" />
+    <ClCompile Include="Buffer\VertexBuffer.cpp" />
+    <ClCompile Include="Vertex\Vertex.cpp" />
+    <ClCompile Include="Window\Window.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Command\DrawPointCommand.h" />
+    <ClInclude Include="Command\DrawStaticMeshCommand.h" />
+    <ClInclude Include="Buffer\IndexBuffer.h" />
+    <ClInclude Include="Buffer\DirectX11VertexBuffer.h" />
+    <ClInclude Include="Buffer\DirectX11IndexBuffer.h" />
+    <ClInclude Include="Math\HSVColor.h" />
+    <ClInclude Include="Material\Material.h" />
+    <ClInclude Include="Material\DirectX11Material.h" />
+    <ClInclude Include="Math\Color32.h" />
+    <ClInclude Include="Command\CommandQueue.h" />
     <ClInclude Include="Component\BoxComponent.h" />
     <ClInclude Include="Component\ActorComponent.h" />
     <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Command\DrawCommand.h" />
+    <ClInclude Include="Command\DrawTextCommand.h" />
+    <ClInclude Include="Math\LinearColor.h" />
+    <ClInclude Include="Mesh\StaticMesh.h" />
+    <ClInclude Include="Component\StaticMeshComponent.h" />
+    <ClInclude Include="RHI\RHIFactory.h" />
+    <ClInclude Include="RHI\DirectX11RHI.h" />
+    <ClInclude Include="RHI\ConsoleRHI.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Component\InputComponent.h" />
+    <ClInclude Include="RHI\RHI.h" />
+    <ClInclude Include="Math\ScreenPoint.h" />
     <ClInclude Include="System\InputSystem.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Math\Math.h" />
@@ -204,6 +250,12 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClInclude Include="String\String.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="System\TimerSystem.h" />
+    <ClInclude Include="RHI\WindowsRHI.h" />
+    <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Math\Vector4.h" />
+    <ClInclude Include="Buffer\VertexBuffer.h" />
+    <ClInclude Include="Vertex\Vertex.h" />
+    <ClInclude Include="Window\Window.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

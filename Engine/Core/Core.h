@@ -38,11 +38,33 @@ public:
 	FORCEINLINE CRenderSystem* GetRenderSystem() const { return RenderSystem; }
 
 protected:
+	// 게임 로직을 처리하는 함수
+	void GameThread();
+
+	// 렌더링을 처리하는 함수
+	void RenderThread();
+
+protected:
 	// 싱글톤 구현을 위한 정적 인스턴스
 	static CCore* Instance;
 
 	// 실행 플래그
-	bool bRunning;
+	static std::atomic<bool> bRunning;
+
+	// 업데이트 완료 플래그
+	std::atomic<bool> bUpdateCompleted;
+
+	// 스레드 동기화를 위한 조건 변수
+	std::condition_variable UpdateCondition;
+
+	// 스레드 동기화를 위한 뮤텍스
+	std::mutex SyncMutex;
+
+	// 게임 스레드 핸들
+	std::thread GameThreadHandle;
+
+	// 렌더 스레드 핸들
+	std::thread RenderThreadHandle;
 
 	// 델타 타임
 	float DeltaTime;

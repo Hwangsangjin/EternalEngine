@@ -11,14 +11,17 @@
 // 스태틱 변수 초기화
 CCore* CCore::Instance = nullptr;
 
+// 게임이 실행 중인지 체크
+std::atomic<bool> CCore::bRunning(true);
+
 CCore::CCore()
-	: bRunning(true)
-	, DeltaTime(0.0f)
-	, World(new CWorld)
+	: DeltaTime(0.0f)
+	, bUpdateCompleted(false)
 	, TimerSystem(new CTimerSystem)
 	, InputSystem(new CInputSystem)
 	, AudioSystem(new CAudioSystem)
 	, RenderSystem(new CRenderSystem)
+	, World(new CWorld)
 {
 	// 싱글톤 객체 설정
 	Instance = this;
@@ -59,27 +62,100 @@ void CCore::Run()
 	// 목표 프레임 설정
 	TimerSystem->SetTargetFPS(60.0f);
 
-	// 게임 루프
+	// 게임 스레드와 렌더 스레드 시작
+	GameThreadHandle = std::thread(&CCore::GameThread, this);
+	RenderThreadHandle = std::thread(&CCore::RenderThread, this);
+
+	// 메시지 루프
+	MSG Msg = {};
 	while (bRunning)
+	{
+		// 메시지 큐에서 메시지를 가져와 처리
+		if (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			// 메시지 변역
+			TranslateMessage(&Msg);
+
+			// 메시지를 윈도우 프로시저로 전달
+			DispatchMessage(&Msg);
+
+			// 종료 요청 메시지인 경우
+			if (Msg.message == WM_QUIT)
+				Quit();
+		}
+	}
+
+	// 스레드들이 종료될 때까지 기다리기
+	if (GameThreadHandle.joinable())
+		GameThreadHandle.join();
+	if (RenderThreadHandle.joinable())
+		RenderThreadHandle.join();
+}
+
+void CCore::GameThread()
+{
+	while (bRunning.load(std::memory_order_acquire))
 	{
 		// 델타 타임 계산
 		DeltaTime = TimerSystem->CalculateDeltaTime();
-		
+
 		// 입력 처리
 		InputSystem->ProcessInput();
 
-		// 업데이트
+		// 월드 업데이트
 		World->Update(DeltaTime);
 
-		// 렌더
+		// 게임 스레드 완료 처리
+		bUpdateCompleted.store(true, std::memory_order_release);
+
+		// 렌더 스레드에 알림
+		UpdateCondition.notify_one();
+
+		// 렌더 스레드가 작업을 완료했는지 확인
+		std::unique_lock<std::mutex> Lock(SyncMutex);
+		UpdateCondition.wait(Lock, [this] { return !bUpdateCompleted.load() || !bRunning.load(); });
+	}
+}
+
+void CCore::RenderThread()
+{
+	while (bRunning.load(std::memory_order_acquire))
+	{
+		// 게임 스레드가 업데이트 완료될 때까지 대기
+		std::unique_lock<std::mutex> Lock(SyncMutex);
+		UpdateCondition.wait(Lock, [this] { return bUpdateCompleted.load() || !bRunning.load(); });
+
+		// 렌더링
 		RenderSystem->Render();
+
+		// 게임 스레드가 다음 업데이트를 할 수 있도록 상태 초기화
+		bUpdateCompleted.store(false, std::memory_order_release);
+
+		// 게임 스레드에 업데이트 완료 알림
+		UpdateCondition.notify_one();
 	}
 }
 
 void CCore::Quit()
 {
-	// 실행 플래그 설정
-	bRunning = false;
+	// 플래그를 설정하고 대기 중인 스레드들 깨우기
+	{
+		std::lock_guard<std::mutex> Lock(SyncMutex);
+		bRunning.store(false, std::memory_order_release);
+		bUpdateCompleted.store(true, std::memory_order_release);
+		UpdateCondition.notify_all();
+	}
+
+	// 현재 스레드의 ID 가져오기
+	std::thread::id ThisThreadId = std::this_thread::get_id();
+
+	// 게임 스레드가 실행 중이고, 현재 스레드가 게임 스레드가 아닌 경우
+	if (GameThreadHandle.joinable() && GameThreadHandle.get_id() != ThisThreadId)
+		GameThreadHandle.join();
+
+	// 렌더 스레드가 실행 중이고, 현재 스레드가 렌더 스레드가 아닌 경우
+	if (RenderThreadHandle.joinable() && RenderThreadHandle.get_id() != ThisThreadId)
+		RenderThreadHandle.join();
 }
 
 void CCore::LoadLevel(CLevel* InLevel)
