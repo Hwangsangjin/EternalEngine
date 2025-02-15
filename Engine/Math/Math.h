@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-struct FMath
+struct ENGINE_API FMath
 {
 	template <typename T>
-	FORCEINLINE static T Random(T InMin, T InMax)
+	FORCEINLINE static T Random(const T& InMin, const T& InMax)
 	{
 		if constexpr (std::is_integral<T>::value)
 		{
@@ -43,7 +43,7 @@ struct FMath
 	}
 
 	template<class T>
-	FORCEINLINE static constexpr T Square(const T InNum)
+	FORCEINLINE static constexpr T Square(const T& InNum)
 	{
 		return InNum * InNum;
 	}
@@ -58,36 +58,62 @@ struct FMath
 		return InRadian * 180.0f / Pi;
 	}
 
-	FORCEINLINE static constexpr bool IsNearlyZero(float InFloat, float InTolerance = Epsilon)
+	template <typename T>
+	FORCEINLINE static constexpr bool IsNearlyZero(const T& InValue, float InTolerance = Epsilon)
 	{
-		return FMath::Abs(InFloat) <= InTolerance;
+		return FMath::Abs(InValue) <= InTolerance;
 	}
 
-	FORCEINLINE static constexpr bool IsNearlyEqual(const float InFloat1, const float InFloat2, float InTolerance = Epsilon)
+	template <typename T>
+	FORCEINLINE static constexpr bool IsNearlyEqual(const T& InA, const T& InB, float InTolerance = Epsilon)
 	{
-		return FMath::Abs(InFloat1 - InFloat2) <= InTolerance;
+		return FMath::Abs(InA - InB) <= InTolerance;
 	}
 
-	template<class T>
-	FORCEINLINE static constexpr T Max(const T InA, const T InB)
+	template <typename T>
+	FORCEINLINE static constexpr T Max(const T& InA, const T& InB)
 	{
 		return (InA >= InB) ? InA : InB;
 	}
 
-	template<class T>
-	FORCEINLINE static constexpr T Min(const T InA, const T InB)
+	template <typename T>
+	FORCEINLINE static constexpr T Min(const T& InA, const T& InB)
 	{
 		return (InA <= InB) ? InA : InB;
 	}
 
-	template<class T>
-	FORCEINLINE static constexpr T Abs(const T InA)
+	template <typename T>
+	FORCEINLINE static constexpr T Max3(const T& InA, const T& InB, const T& InC)
+	{
+		return Max(Max(InA, InB), InC);
+	}
+
+	template <typename T>
+	FORCEINLINE static constexpr T Min3(const T& InA, const T& InB, const T& InC)
+	{
+		return Min(Min(InA, InB), InC);
+	}
+
+	template <typename T>
+	FORCEINLINE static constexpr UINT Max3Index(const T& InA, const T& InB, const T& InC)
+	{
+		return (InA > InB) ? ((InA > InC) ? 0 : 2) : ((InB > InC) ? 1 : 2);
+	}
+
+	template <typename T>
+	FORCEINLINE static constexpr UINT Min3Index(const T& InA, const T& InB, const T& InC)
+	{
+		return (InA < InB) ? ((InA < InC) ? 0 : 2) : ((InB < InC) ? 1 : 2);
+	}
+
+	template <typename T>
+	FORCEINLINE static constexpr T Abs(const T& InA)
 	{
 		return (InA >= (T)0) ? InA : -InA;
 	}
 
-	template<class T>
-	FORCEINLINE static constexpr T Clamp(const T InX, const T InMin, const T InMax)
+	template <typename T>
+	FORCEINLINE static constexpr T Clamp(const T& InX, const T& InMin, const T& InMax)
 	{
 		return InX < InMin ? InMin : InX < InMax ? InX : InMax;
 	}
