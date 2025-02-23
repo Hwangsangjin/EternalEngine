@@ -2,6 +2,8 @@
 
 #include "Material.h"
 
+class FDirectX11Texture;
+
 class ENGINE_API FDirectX11Material : public FMaterial
 {
 public:
@@ -9,6 +11,8 @@ public:
 	virtual ~FDirectX11Material();
 
 	virtual void Bind() override;
+
+	void SetTexture(const FString& TextureName);
 
 private:
 	ID3D11InputLayout* InputLayout;
@@ -18,5 +22,11 @@ private:
 
 	ID3DBlob* VertexBlob;
 	ID3DBlob* PixelBlob;
-};
 
+	ID3D11Texture2D* DefaultTexture;
+	ID3D11ShaderResourceView* DefaultShaderResourceView;
+	ID3D11SamplerState* DefaultSamplerState;
+
+	FDirectX11Texture* Texture;
+	bool bHasTexture;
+};
