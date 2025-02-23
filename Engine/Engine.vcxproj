@@ -124,11 +124,13 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Library</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy $(ProjectDir)*.h $(SolutionDir)Include\$(ProjectName)\ /e /y</Command>
+      <Command>set SHADER_DIR=$(SolutionDir)Resource\Shader
+call $(SolutionDir)\ShaderCompile.bat
+xcopy $(ProjectDir)*.h $(SolutionDir)Include\$(ProjectName)\ /e /y</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy $(OutDir)*.dll $(SolutionDir)Library\ /e /y
-xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
+      <Command>move /y "$(OutDir)*.dll" "$(SolutionDir)Library\"
+move /y "$(OutDir)*.lib" "$(SolutionDir)Library\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,6 +168,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClCompile Include="Buffer\IndexBuffer.cpp" />
     <ClCompile Include="Buffer\DirectX11VertexBuffer.cpp" />
     <ClCompile Include="Buffer\DirectX11IndexBuffer.cpp" />
+    <ClCompile Include="Texture\DirectX11Texture.cpp" />
     <ClCompile Include="Math\HSVColor.cpp" />
     <ClCompile Include="Material\Material.cpp" />
     <ClCompile Include="Material\DirectX11Material.cpp" />
@@ -207,6 +210,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Math\Vector4.cpp" />
     <ClCompile Include="Buffer\VertexBuffer.cpp" />
+    <ClCompile Include="Texture\Texture.cpp" />
     <ClCompile Include="Vertex\Vertex.cpp" />
     <ClCompile Include="Window\Window.cpp" />
     <ClCompile Include="World\World.cpp" />
@@ -217,6 +221,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClInclude Include="Buffer\IndexBuffer.h" />
     <ClInclude Include="Buffer\DirectX11VertexBuffer.h" />
     <ClInclude Include="Buffer\DirectX11IndexBuffer.h" />
+    <ClInclude Include="Texture\DirectX11Texture.h" />
     <ClInclude Include="Math\HSVColor.h" />
     <ClInclude Include="Material\Material.h" />
     <ClInclude Include="Material\DirectX11Material.h" />
@@ -254,6 +259,7 @@ xcopy $(OutDir)*.lib $(SolutionDir)Library\ /e /y</Command>
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Buffer\VertexBuffer.h" />
+    <ClInclude Include="Texture\Texture.h" />
     <ClInclude Include="Vertex\Vertex.h" />
     <ClInclude Include="Window\Window.h" />
     <ClInclude Include="World\World.h" />
