@@ -62,6 +62,12 @@ enum class ERHIType
 	DX11
 };
 
+enum class EBindType
+{
+	VS,
+	PS
+};
+
 enum class EKeyState
 {
 	None,
