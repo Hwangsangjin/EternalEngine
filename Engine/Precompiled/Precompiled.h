@@ -34,7 +34,10 @@
 #include <array>
 #include <deque>
 #include <queue>
+#include <set>
 #include <map>
+#include <unordered_set>
+#include <unordered_map>
 
 #include <d3d11.h>
 #include <dxgi.h>
