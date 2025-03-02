@@ -28,6 +28,9 @@ CCore::CCore()
 
 	// 랜덤 시드 설정
 	srand((unsigned int)time(nullptr));
+
+	// 콘솔 입력 모드 설정
+	SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS);
 }
 
 CCore::~CCore()
@@ -62,9 +65,10 @@ void CCore::Run()
 	// 목표 프레임 설정
 	TimerSystem->SetTargetFPS(60.0f);
 
-	// 게임 스레드와 렌더 스레드 시작
+	// 스레드 시작
 	GameThreadHandle = std::thread(&CCore::GameThread, this);
 	RenderThreadHandle = std::thread(&CCore::RenderThread, this);
+	ConsoleInputThreadHandle = std::thread(&CCore::ConsoleInputThread, this);
 
 	// 메시지 루프
 	MSG Msg = {};
@@ -85,11 +89,13 @@ void CCore::Run()
 		}
 	}
 
-	// 스레드들이 종료될 때까지 기다리기
+	// 스레드가 종료될 때까지 기다리기
 	if (GameThreadHandle.joinable())
 		GameThreadHandle.join();
 	if (RenderThreadHandle.joinable())
 		RenderThreadHandle.join();
+	if (ConsoleInputThreadHandle.joinable())
+		ConsoleInputThreadHandle.join();
 }
 
 void CCore::GameThread()
@@ -136,6 +142,29 @@ void CCore::RenderThread()
 	}
 }
 
+void CCore::ConsoleInputThread()
+{
+	static HANDLE StdHandle = GetStdHandle(STD_INPUT_HANDLE);
+	INPUT_RECORD InputRecord;
+	DWORD Event;
+
+	while (bRunning.load(std::memory_order_acquire))
+	{
+		if (ReadConsoleInput(StdHandle, &InputRecord, 1, &Event))
+		{
+			if (!bRunning.load(std::memory_order_acquire))
+				break;
+
+			switch (InputRecord.EventType)
+			{
+			case MOUSE_EVENT:
+				InputSystem->SetMousePosition(InputRecord.Event.MouseEvent.dwMousePosition);
+				break;
+			}
+		}
+	}
+}
+
 void CCore::Quit()
 {
 	// 플래그를 설정하고 대기 중인 스레드들 깨우기
@@ -145,6 +174,9 @@ void CCore::Quit()
 		bUpdateCompleted.store(true, std::memory_order_release);
 		UpdateCondition.notify_all();
 	}
+
+	// 콘솔 종료
+	FreeConsole();
 
 	// 현재 스레드의 ID 가져오기
 	std::thread::id ThisThreadId = std::this_thread::get_id();
@@ -156,6 +188,10 @@ void CCore::Quit()
 	// 렌더 스레드가 실행 중이고, 현재 스레드가 렌더 스레드가 아닌 경우
 	if (RenderThreadHandle.joinable() && RenderThreadHandle.get_id() != ThisThreadId)
 		RenderThreadHandle.join();
+
+	// 콘솔 입력 스레드가 실행 중이고, 현재 스레드가 콘솔 입력 스레드가 아닌 경우
+	if (ConsoleInputThreadHandle.joinable() && ConsoleInputThreadHandle.get_id() != ThisThreadId)
+		ConsoleInputThreadHandle.join();
 }
 
 void CCore::LoadLevel(CLevel* InLevel)

@@ -37,16 +37,22 @@ public:
 	FORCEINLINE CAudioSystem* GetAudioSystem() const { return AudioSystem; }
 	FORCEINLINE CRenderSystem* GetRenderSystem() const { return RenderSystem; }
 
-protected:
+private:
 	// 게임 로직을 처리하는 함수
 	void GameThread();
 
 	// 렌더링을 처리하는 함수
 	void RenderThread();
 
-protected:
+	// 콘솔 입력을 처리하는 함수
+	void ConsoleInputThread();
+
+private:
 	// 싱글톤 구현을 위한 정적 인스턴스
 	static CCore* Instance;
+
+	// 델타 타임
+	float DeltaTime;
 
 	// 실행 플래그
 	static std::atomic<bool> bRunning;
@@ -66,8 +72,8 @@ protected:
 	// 렌더 스레드 핸들
 	std::thread RenderThreadHandle;
 
-	// 델타 타임
-	float DeltaTime;
+	// 콘솔 입력 스레드 핸들
+	std::thread ConsoleInputThreadHandle;
 
 	// 시스템
 	CTimerSystem* TimerSystem;
