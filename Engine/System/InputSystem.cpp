@@ -2,6 +2,7 @@
 #include "InputSystem.h"
 
 CInputSystem::CInputSystem()
+	: MousePosition()
 {
 	KeyStates.fill(EKeyState::None);
 }
